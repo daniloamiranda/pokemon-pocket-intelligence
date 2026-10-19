@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/source.json",
+  "title": "Source - fonte de dados com governanca",
+  "description": "Toda linha do banco carrega source_id (FASE1 §4.3). tier conforme diagnostico: canonical (pocket.limitlesstcg.com) / crosscheck (untapped, pokemontcgpocket.app, pocketmeta.app) / enrichment (TCGdex).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-card-database",
+    "pokemon-pocket-meta-analyzer"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "base_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "api",
+        "scrape",
+        "dataset",
+        "manual",
+        "rulebook"
+      ]
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "canonical",
+        "crosscheck",
+        "enrichment"
+      ]
+    },
+    "policy": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Politica de uso (robots, rate limit, licenca)"
+    },
+    "requires_key": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "base_url",
+    "kind",
+    "tier"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "limitless-pocket-db",
+    "name": "Limitless TCG Pocket Database",
+    "base_url": "https://pocket.limitlesstcg.com",
+    "kind": "scrape",
+    "tier": "canonical",
+    "policy": "Uso por link/referencia — nenhuma imagem redistribuida",
+    "requires_key": false
+  }
+}

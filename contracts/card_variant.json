@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/card_variant.json",
+  "title": "CardVariant - impressao/arte da carta",
+  "description": "Impressao (print) de uma carta mecanica: conjunto, numero, raridade, arte. Varias impressoes = mesma identidade mecanica. UNIQUE (card_id, set_code, number) no banco. Imagens sao URL, nunca asset redistribuivel (FASE1 §13.7).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-card-database",
+    "pokemon-pocket-card-vision"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "card_id": {
+      "type": "string"
+    },
+    "set_code": {
+      "type": "string",
+      "description": "Codigo de conjunto (ex.: B4b)"
+    },
+    "number": {
+      "type": "string"
+    },
+    "rarity": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Simbolo visual (ex.: raridade por simbolos)"
+    },
+    "artist": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "image_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "URL apenas — NUNCA redistribuir bytes de arte"
+    },
+    "is_promo": {
+      "type": "boolean",
+      "default": false
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "card_id",
+    "set_code",
+    "number",
+    "source_id",
+    "collected_at"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "mega-gengar-ex-B4b-141",
+    "card_id": "mega-gengar-ex-B4b",
+    "set_code": "B4b",
+    "number": "141",
+    "rarity": "C4",
+    "artist": "5ban Graphics",
+    "is_promo": false,
+    "source_id": "limitless-pocket-db",
+    "collected_at": "2026-10-18T16:45:00-03:00"
+  }
+}

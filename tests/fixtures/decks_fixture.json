@@ -1,0 +1,126 @@
+{
+  "interval_starts": [],
+  "cases": {
+    "legal_deck": {
+      "id": "fx-deck-legal-01",
+      "name": "Deck legal (fixture)",
+      "format": "standard",
+      "total_cards": 20,
+      "cards": [
+        {"card_id": "gengar-A2", "quantity": 2},
+        {"card_id": "haunter-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 1},
+        {"card_id": "cynthia-EX", "quantity": 1},
+        {"card_id": "red-GM", "quantity": 1},
+        {"card_id": "red-GM", "quantity": 1},
+        {"card_id": "misty-A1", "quantity": 1},
+        {"card_id": "misty-A1", "quantity": 1},
+        {"card_id": "wally-A2", "quantity": 2},
+        {"card_id": "sabrina-A2", "quantity": 2},
+        {"card_id": "iono-A2", "quantity": 2},
+        {"card_id": "profresearch-A2", "quantity": 2}
+      ],
+      "source_id": "fixture"
+    },
+    "violation_deck_size": {
+      "id": "fx-deck-19cards",
+      "name": "Deck com 19 cartas",
+      "format": "standard",
+      "total_cards": 20,
+      "cards": [
+        {"card_id": "gengar-A2", "quantity": 2},
+        {"card_id": "haunter-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 2},
+        {"card_id": "red-GM", "quantity": 2},
+        {"card_id": "misty-A1", "quantity": 2},
+        {"card_id": "wally-A2", "quantity": 2},
+        {"card_id": "sabrina-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 1},
+        {"card_id": "red-GM", "quantity": 1},
+        {"card_id": "misty-A1", "quantity": 1},
+        {"card_id": "wally-A2", "quantity": 0}
+      ],
+      "source_id": "fixture-bad"
+    },
+    "violation_copies_limit": {
+      "id": "fx-deck-3xgastly",
+      "name": "Deck com 3 copies do Gastly",
+      "format": "standard",
+      "total_cards": 20,
+      "cards": [
+        {"card_id": "gengar-A2", "quantity": 2},
+        {"card_id": "haunter-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 3},
+        {"card_id": "cynthia-EX", "quantity": 2},
+        {"card_id": "red-GM", "quantity": 2},
+        {"card_id": "misty-A1", "quantity": 2},
+        {"card_id": "wally-A2", "quantity": 2},
+        {"card_id": "sabrina-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 1},
+        {"card_id": "red-GM", "quantity": 1},
+        {"card_id": "misty-A1", "quantity": 1}
+      ],
+      "source_id": "fixture-bad"
+    },
+    "violation_card_not_in_catalog": {
+      "id": "fx-deck-ghost-card",
+      "name": "Deck com carta que nao existe no catalogo",
+      "format": "standard",
+      "total_cards": 20,
+      "cards": [
+        {"card_id": "gengar-A2", "quantity": 2},
+        {"card_id": "haunter-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 2},
+        {"card_id": "red-GM", "quantity": 2},
+        {"card_id": "misty-A1", "quantity": 2},
+        {"card_id": "wally-A2", "quantity": 2},
+        {"card_id": "sabrina-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 1},
+        {"card_id": "nao-existente-XYZ", "quantity": 3}
+      ],
+      "source_id": "fixture-bad"
+    },
+    "violation_card_illegal_in_format": {
+      "id": "fx-deck-retired-card",
+      "name": "Deck com carta ilegal no formato",
+      "format": "standard",
+      "total_cards": 20,
+      "cards": [
+        {"card_id": "gengar-A2", "quantity": 2},
+        {"card_id": "haunter-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 2},
+        {"card_id": "red-GM", "quantity": 2},
+        {"card_id": "misty-A1", "quantity": 2},
+        {"card_id": "wally-A2", "quantity": 2},
+        {"card_id": "sabrina-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 1},
+        {"card_id": "red-GM", "quantity": 1},
+        {"card_id": "vulpix-GG", "quantity": 2}
+      ],
+      "source_id": "fixture-bad"
+    },
+    "violation_evolution_without_pre_evo": {
+      "id": "fx-deck-orphan-evolution",
+      "name": "Deck com Gengar ex sem Haunter no deck",
+      "format": "standard",
+      "total_cards": 20,
+      "cards": [
+        {"card_id": "gengar-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 2},
+        {"card_id": "gastly-A2", "quantity": 2},
+        {"card_id": "cynthia-EX", "quantity": 2},
+        {"card_id": "red-GM", "quantity": 2},
+        {"card_id": "misty-A1", "quantity": 2},
+        {"card_id": "wally-A2", "quantity": 2},
+        {"card_id": "sabrina-A2", "quantity": 2},
+        {"card_id": "iono-A2", "quantity": 2},
+        {"card_id": "profresearch-A2", "quantity": 2}
+      ],
+      "source_id": "fixture-bad"
+    }
+  }
+}

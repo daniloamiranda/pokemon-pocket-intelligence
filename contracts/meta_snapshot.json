@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/meta_snapshot.json",
+  "title": "MetaSnapshot - fotografia periodica do metagame",
+  "description": "Snapshot com janela rolante e escopo declarado (FASE1 §5 — modelo metodologico pokemontcgpocket.app).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-meta-analyzer"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "window_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "window_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "scope": {
+      "type": "string",
+      "description": "ex.: 'public standard Swiss'"
+    },
+    "tournament_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "decklist_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "match_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "archetypes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "archetype_id": {
+            "type": "string"
+          },
+          "share_pct": {
+            "type": "number"
+          },
+          "win_rate_pct": {
+            "type": "number"
+          },
+          "tier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "archetype_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "window_start",
+    "window_end",
+    "scope",
+    "source_id",
+    "collected_at"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "snap-2026-10-18",
+    "window_start": "2026-09-18",
+    "window_end": "2026-10-18",
+    "scope": "public standard Swiss, min 64 players",
+    "tournament_count": 30,
+    "decklist_count": 6247,
+    "match_count": 17005,
+    "source_id": "pokemontcgpocket-app",
+    "collected_at": "2026-10-18T16:45:00-03:00"
+  }
+}

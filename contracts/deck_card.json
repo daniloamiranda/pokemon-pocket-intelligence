@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/deck_card.json",
+  "title": "DeckCard - linha do deck (carta + copias)",
+  "description": "Item atomico do deck: card_id + quantidade (1 ou 2 copias; restricoes especiais podem baixar o limite). print_id e OPCIONAL — referencia a impressao especifica.",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-deck-builder",
+    "pokemon-pocket-deck-evaluator"
+  ],
+  "properties": {
+    "card_id": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "print_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "card_id",
+    "quantity"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "card_id": "mega-gengar-ex-B4b",
+    "quantity": 2
+  }
+}

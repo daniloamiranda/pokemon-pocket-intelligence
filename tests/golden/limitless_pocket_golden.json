@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-10-18",
+  "source": "pocket.limitlesstcg.com",
+  "note": "Cartas conhecidas extraidas do SQLite canonico para testes de regressao do catalogo. Dados coletados via pocket.limitlesstcg.com em 18/10/2026.",
+  "cards": [
+    {
+      "set": "B4b",
+      "number": "141",
+      "canonical_name": "Mega Gengar ex",
+      "category": "pokemon",
+      "element": "darkness",
+      "hp": 210,
+      "stage": "mega_ex",
+      "weakness_element": "fighting",
+      "retreat_cost": 1,
+      "is_ex": 1,
+      "artist": "PLANETA CG Works",
+      "attack": {
+        "name": "Labyrinth of Shadows",
+        "energy_cost": ["darkness", "darkness", "darkness", "colorless"],
+        "damage": 120,
+        "effect_text": "During your opponent's next turn, they can't play any Trainer cards from their hand."
+      },
+      "rule": "Mega Evolution ex rule: When your Mega Evolution Pokémon ex is Knocked Out, your opponent gets 3 points.",
+      "expected_prints": ["B2b#39", "B2b#79", "B2b#114", "B4b#141", "B4b#419"]
+    },
+    {
+      "set": "A1",
+      "number": "1",
+      "canonical_name": "Bulbasaur",
+      "category": "pokemon",
+      "element": "grass",
+      "hp": 60,
+      "stage": "basic",
+      "attack": {
+        "name": "Tackle",
+        "energy_cost": ["grass"],
+        "damage": 20,
+        "effect_text": null
+      }
+    },
+    {
+      "set": "A1",
+      "number": "226",
+      "canonical_name": "Lt. Surge",
+      "category": "trainer_supporter",
+      "element": null,
+      "hp": null,
+      "stage": null
+    },
+    {
+      "set": "A1",
+      "number": "216",
+      "canonical_name": "Helix Fossil",
+      "category": "trainer_item",
+      "element": null,
+      "hp": 40,
+      "stage": null
+    },
+    {
+      "set": "A1",
+      "number": "281",
+      "canonical_name": "Pikachu ex",
+      "category": "pokemon",
+      "element": "lightning",
+      "hp": 120,
+      "stage": "basic",
+      "is_ex": 1,
+      "attack": {
+        "name": "Circle Circuit",
+        "energy_cost": ["lightning", "lightning"],
+        "damage": 30,
+        "effect_text": "This attack does 30 damage for each of your Benched [L] Pokémon."
+      }
+    }
+  ],
+  "expansions": {
+    "B4b": {"name": "Deluxe Pack: Mega", "release_date": "2026-09-30", "card_count": 429},
+    "A1": {"name": "Genetic Apex", "release_date": "2024-10-30", "card_count": 286}
+  }
+}

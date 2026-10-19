@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Credenciais e segredos — NUNCA versionar
+.env
+*.key
+*_secret.json
+*token*.json
+
+# Banco operacional e backups (dados, nao codigo)
+database/*.sqlite
+database/*.sqlite-wal
+database/*.sqlite-shm
+database/backups/
+*.db
+*.db-wal
+
+# Coleta bruta e cache (dados de terceiros, nao redistribuir)
+data/*
+!data/collection_report.json
+cache/
+evidence/
+raw/
+*.html
+
+# Logs de execucao (artefatos de runtime, nao fonte)
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Imagens de carta de terceiros (artes TPC/DeNA via CDN Limitless) - NUNCA versionar
+# docs/ATTRIBUTION.md: nao redistribuir arte; baixar sob demanda com
+# scripts/vision/fetch_fixtures.py e guardar apenas URL
+tests/vision/fixtures/*.webp
+tests/vision/fixtures/*.png
+tests/vision/fixtures/*.jpg
+tests/vision/fixtures_bad/*.webp
+tests/vision/fixtures_bad/*.png
+tests/vision/fixtures_bad/*.jpg

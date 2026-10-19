@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/deck.json",
+  "title": "Deck - lista de 20 cartas",
+  "description": "Uma lista construida ou extraida de torneio. Cartas nunca por nome solto — sempre por card_id do catalogo. Legalidade e validada pelo pokemon-pocket-rules contra o registry de rules.",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-deck-builder",
+    "pokemon-pocket-deck-evaluator",
+    "pokemon-pocket-rules"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string"
+    },
+    "total_cards": {
+      "type": "integer",
+      "const": 20
+    },
+    "archetype": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "cards": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "deck_card.json"
+      }
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "format",
+    "total_cards",
+    "cards",
+    "source_id"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "deck-mega-gengar-001",
+    "name": "Mega Gengar ex - prototype",
+    "format": "standard",
+    "total_cards": 20,
+    "archetype": "mega-gengar-ex",
+    "cards": [
+      {
+        "card_id": "mega-gengar-ex-B4b",
+        "quantity": 2
+      },
+      {
+        "card_id": "haunter-B4b",
+        "quantity": 2
+      },
+      {
+        "card_id": "gastly-B4b",
+        "quantity": 2
+      }
+    ],
+    "source_id": "local-build"
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "generated_at": "2026-10-18T23:02:53Z",
+  "source": "pocket.limitlesstcg.com",
+  "per_set": [
+    {
+      "set": "A1",
+      "declared": 286,
+      "loaded": 286,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A1a",
+      "declared": 86,
+      "loaded": 86,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A2",
+      "declared": 207,
+      "loaded": 207,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A2a",
+      "declared": 96,
+      "loaded": 96,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A2b",
+      "declared": 111,
+      "loaded": 111,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A3",
+      "declared": 239,
+      "loaded": 239,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A3a",
+      "declared": 103,
+      "loaded": 103,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A3b",
+      "declared": 107,
+      "loaded": 107,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A4",
+      "declared": 241,
+      "loaded": 241,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A4a",
+      "declared": 105,
+      "loaded": 105,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "A4b",
+      "declared": 379,
+      "loaded": 379,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B1",
+      "declared": 331,
+      "loaded": 331,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B1a",
+      "declared": 103,
+      "loaded": 103,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B2",
+      "declared": 234,
+      "loaded": 234,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B2a",
+      "declared": 131,
+      "loaded": 131,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B2b",
+      "declared": 117,
+      "loaded": 117,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B3",
+      "declared": 234,
+      "loaded": 234,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B3a",
+      "declared": 109,
+      "loaded": 109,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B3b",
+      "declared": 106,
+      "loaded": 106,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B4",
+      "declared": 233,
+      "loaded": 233,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B4a",
+      "declared": 110,
+      "loaded": 110,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "B4b",
+      "declared": 429,
+      "loaded": 429,
+      "coverage_pct": 100.0,
+      "gap": 0
+    },
+    {
+      "set": "P-A",
+      "declared": 0,
+      "loaded": 117,
+      "coverage_pct": null,
+      "gap": null,
+      "note": "sem contagem declarada pela fonte (promo)"
+    },
+    {
+      "set": "P-B",
+      "declared": 0,
+      "loaded": 103,
+      "coverage_pct": null,
+      "gap": null,
+      "note": "sem contagem declarada pela fonte (promo)"
+    }
+  ],
+  "total_declared": 4097,
+  "total_loaded": 4317,
+  "total_loaded_counted_sets": 4097,
+  "overall_pct": 100.0,
+  "cards_rows": 2319,
+  "card_prints_rows": 4317,
+  "promo_sets_without_declared_count": [
+    {
+      "set": "P-A",
+      "loaded": 117,
+      "note": "a fonte nao declara contagem para promos; fora do calculo percentual por design"
+    },
+    {
+      "set": "P-B",
+      "loaded": 103,
+      "note": "a fonte nao declara contagem para promos; fora do calculo percentual por design"
+    }
+  ],
+  "collect": {
+    "entries": {
+      "A1": 286,
+      "P-A": 117,
+      "B4b": 429
+    },
+    "declared": {
+      "A1": 286,
+      "P-A": null,
+      "B4b": 429
+    },
+    "detail_ok": {
+      "A1": 286,
+      "P-A": 117,
+      "B4b": 429
+    },
+    "failed_sets": []
+  },
+  "elapsed_seconds": 75.4,
+  "image_url_policy": {
+    "pattern": "https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/pocket/{SET}/{SET}_{NNN:03d}_EN_SM.webp",
+    "verified_against": "src real de <div class=\"card-image\"> nas fichas e das listagens display=compact&show=all (24/24 conjuntos)",
+    "promo_exceptions": "nenhuma: P-A/P-B usam o mesmo padrao (P-A_001_EN_SM.webp etc)",
+    "filled_prints": 4317,
+    "total_prints": 4317,
+    "coverage_pct": 100.0,
+    "http_check": "amostragem 10/conjunto x 24 conjuntos: 240/240 HTTP 200 em 2026-10-18",
+    "images_downloaded": false
+  }
+}

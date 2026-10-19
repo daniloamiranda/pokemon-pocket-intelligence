@@ -1,0 +1,250 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/card.json",
+  "title": "Card - identidade mecanica da carta",
+  "description": "Identidade MECANICA da carta (independente de impressao/arte). Impressoes vivem em card_variant.json / card_prints. Fonte canonica: pocket.limitlesstcg.com (FASE1 §4.3).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-card-database",
+    "pokemon-pocket-deck-builder",
+    "pokemon-pocket-deck-evaluator",
+    "pokemon-pocket-rules"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$",
+      "description": "ID canonico estavel (ex.: mega-gengar-ex-B4b)"
+    },
+    "canonical_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "pokemon",
+        "trainer_item",
+        "trainer_supporter",
+        "trainer_stadium",
+        "pokemon_tool",
+        "energy_basic",
+        "energy_special"
+      ]
+    },
+    "element": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "grass",
+        "fire",
+        "water",
+        "lightning",
+        "psychic",
+        "fighting",
+        "darkness",
+        "metal",
+        "dragon",
+        "colorless",
+        null
+      ]
+    },
+    "stage": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "basic",
+        "stage1",
+        "stage2",
+        "mega_ex",
+        null
+      ]
+    },
+    "evolves_from_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "hp": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "weakness_element": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "grass",
+        "fire",
+        "water",
+        "lightning",
+        "psychic",
+        "fighting",
+        "darkness",
+        "metal",
+        null
+      ]
+    },
+    "retreat_cost": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 4
+    },
+    "special_rule": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Regra especial literal (ex.: 'Mega Evolution ex')"
+    },
+    "mechanical_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 do payload mecanico — base de dedup/upsert"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verified_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "divergent",
+        "rejected"
+      ]
+    },
+    "is_ex": {
+      "type": "boolean",
+      "default": false
+    },
+    "attacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "energy_cost": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "damage": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "effect_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sort_order": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "abilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "ability",
+              "ancient_trait"
+            ]
+          },
+          "effect_text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "effect_text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "id",
+    "canonical_name",
+    "category",
+    "source_id",
+    "collected_at",
+    "mechanical_hash"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "mega-gengar-ex-B4b",
+    "canonical_name": "Mega Gengar ex",
+    "category": "pokemon",
+    "element": "darkness",
+    "stage": "mega_ex",
+    "hp": 210,
+    "weakness_element": "fighting",
+    "retreat_cost": 1,
+    "is_ex": true,
+    "special_rule": "Mega Evolution ex",
+    "attacks": [
+      {
+        "name": "Labyrinth of Shadows",
+        "energy_cost": [
+          "darkness",
+          "darkness",
+          "darkness",
+          "colorless"
+        ],
+        "damage": 120,
+        "effect_text": "Durante o proximo turno do oponente, ele nao pode jogar nenhuma carta de Treinador da propria mao.",
+        "sort_order": 0
+      }
+    ],
+    "mechanical_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_id": "limitless-pocket-db",
+    "collected_at": "2026-10-18T16:45:00-03:00",
+    "verified_at": "2026-10-18T16:45:00-03:00",
+    "validation_status": "verified"
+  }
+}

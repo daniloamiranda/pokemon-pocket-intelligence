@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/rule.json",
+  "title": "Rule - regra de jogo (registry de legalidade)",
+  "description": "Uma regra oficial documentada, com fonte, data de verificacao e vigencia. Regra 6 do escopo: NUNCA inventar regra sem fonte. Todo ID e estavel e citavel pelo validador.",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-rules"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_-]+$"
+    },
+    "code": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deck_size",
+        "copies_limit",
+        "legality",
+        "evolution",
+        "restriction",
+        "format",
+        "governance"
+      ]
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "title",
+    "description",
+    "category",
+    "source_id",
+    "verified_at",
+    "valid_from"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "DECK-001",
+    "code": "deck_size_20",
+    "title": "Deck tem exatamente 20 cartas",
+    "description": "Um deck TCG Pocket possui exatamente 20 cartas. Diferente de 20 = reprovado.",
+    "category": "deck_size",
+    "source_id": "pocket-rulebook",
+    "verified_at": "2026-10-18T16:45:00-03:00",
+    "valid_from": "2025-10-30",
+    "exceptions": [],
+    "examples": []
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/evaluation.json",
+  "title": "Evaluation - nota heuristica de deck",
+  "description": "Avaliacao multidimensional com PESOS EXPLICITOS e niveis de confianca. Nenhum score sem evidencia (FASE1 §13.5: popularidade != desempenho). Confidence 'theoretical' marca analise sem dados de torneio.",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-deck-evaluator"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "deck_id": {
+      "type": "string"
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "score",
+          "weight"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "weights_documented": {
+      "type": "string",
+      "description": "Referencia ao documento de pesos"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "theoretical",
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "deck_id",
+    "overall_score",
+    "dimensions",
+    "weights_documented",
+    "confidence"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "eval-mega-gengar-001",
+    "deck_id": "deck-mega-gengar-001",
+    "overall_score": 6.5,
+    "dimensions": [
+      {
+        "name": "consistency",
+        "score": 7.0,
+        "weight": 0.3
+      },
+      {
+        "name": "win_rate_expected",
+        "score": 6.0,
+        "weight": 0.4,
+        "reason": "sem dados de torneio — teorico"
+      }
+    ],
+    "weights_documented": "docs/EVALUATION-WEIGHTS.md",
+    "confidence": "theoretical",
+    "generated_at": "2026-10-18T20:00:00-03:00"
+  }
+}

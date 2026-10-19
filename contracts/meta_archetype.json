@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/meta_archetype.json",
+  "title": "MetaArchetype - arquetipo competitivo",
+  "description": "Arquetipo observado no metagame. Sem estatistica inventada — Source exigida. Nenhum tier e atribuido sem evidencia (FASE1 §5 e Anexo A: Mega Gengar ex sem evidencia = sem tier).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-meta-analyzer"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "core_cards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "IDs de cartas nucleo do arquetipo"
+    },
+    "tier": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "F",
+        "unknown",
+        null
+      ]
+    },
+    "tier_basis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Metodologia atribuindo o tier — obrigatoria SE tier != null"
+    },
+    "source_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "core_cards",
+    "source_id"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "arch-hoopa-mega-absol",
+    "name": "Hoopa ex / Mega Absol ex",
+    "core_cards": [
+      "hoopa-ex-B4",
+      "mega-absol-ex-B4"
+    ],
+    "tier": "B",
+    "tier_basis": "pocketmeta.app snapshot 2026-10-18 (3.7% share, 219 decks)",
+    "source_id": "pocketmeta"
+  }
+}

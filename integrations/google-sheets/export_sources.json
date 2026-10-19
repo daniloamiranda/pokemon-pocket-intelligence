@@ -1,0 +1,12 @@
+[
+ {
+  "id": "pocket.limitlesstcg.com",
+  "name": "Limitless TCG Pocket Database",
+  "base_url": "https://pocket.limitlesstcg.com",
+  "kind": "scrape",
+  "tier": "canonical",
+  "policy": "HTML server-side; rate limit 1.2s; UA identificado; sem redistribuicao de imagens",
+  "requires_key": 0,
+  "notes": "Fonte primaria de cartas (Fase 1, nivel A). Politica: link/referencia apenas."
+ }
+]

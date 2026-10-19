@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/sync_job.json",
+  "title": "SyncJob - execucao de coleta/sincronizacao",
+  "description": "Registro de coleta incremental (SQLite -> Sheets / Limitless -> SQLite). Idempotencia: retomada com base em cursor, nao em re-execucao cega (FASE1 §10). status='pending' em fila offline.",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-card-database",
+    "pokemon-pocket-meta-analyzer"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "pull",
+        "push"
+      ]
+    },
+    "entity": {
+      "type": "string",
+      "enum": [
+        "cards",
+        "card_prints",
+        "meta",
+        "decks",
+        "matchups",
+        "sheets"
+      ]
+    },
+    "cursor": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "success",
+        "failed",
+        "skipped"
+      ]
+    },
+    "started_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "items_changed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "source_id",
+    "direction",
+    "entity",
+    "status"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "sync-cards-0001",
+    "source_id": "limitless-pocket-db",
+    "direction": "pull",
+    "entity": "cards",
+    "status": "pending"
+  }
+}

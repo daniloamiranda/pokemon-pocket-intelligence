@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/expansion.json",
+  "title": "Expansion - conjunto de cartas",
+  "description": "Conjunto/colecao do Pocket. Fonte canonica de listagem: pocket.limitlesstcg.com/cards (FASE1 §4.1: 24 conjuntos em 18/10/2026).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-card-database"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "code": {
+      "type": "string",
+      "description": "Codigo curto (ex.: B4b)"
+    },
+    "name": {
+      "type": "string"
+    },
+    "series": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "release_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "card_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "name",
+    "release_date",
+    "source_id"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "exp-B4b",
+    "code": "B4b",
+    "name": "Deluxe Pack: Mega",
+    "series": "Deluxe Pack",
+    "release_date": "2026-09-30",
+    "card_count": 429,
+    "source_id": "limitless-pocket-db"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_note": "Fixture de catalogo APENAS para testes do validador (F3). Nao substitui o catalogo real da F4. Dados mecanicos simplificados, coerentes com o formato do Pocket em 2026-10. F8b: catalogo com 2 identidades de Gastly (para testar DECK-002 por NOME) e trainers adicionais para o deck legal de 20 sem repetir nome.",
+  "cards": [
+    {"card_id": "gastly-A2", "name": "Gastly", "category": "pokemon", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "gastly-B2b", "name": "Gastly", "category": "pokemon", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "haunter-A2", "name": "Haunter", "category": "pokemon", "stage": "stage1", "evolves_from": "gastly-A2", "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "haunter-B2b", "name": "Haunter", "category": "pokemon", "stage": "stage1", "evolves_from": "gastly-B2b", "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "gengar-A2", "name": "Gengar ex", "category": "pokemon", "stage": "stage2", "evolves_from": "haunter-A2", "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "mega-gengar-f3b", "name": "Mega Gengar ex", "category": "pokemon", "stage": "mega_ex", "evolves_from": "haunter-B2b", "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "cynthia-EX", "name": "Cynthia", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "red-GM", "name": "Red", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "misty-A1", "name": "Misty", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "wally-A2", "name": "Wally", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "sabrina-A2", "name": "Sabrina", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "iono-A2", "name": "Iono", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "profresearch-A2", "name": "Professor's Research", "category": "trainer", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": null},
+    {"card_id": "vulpix-GG", "name": "Vulpix", "category": "pokemon", "stage": "basic", "evolves_from": null, "legal": false, "legal_formats": [], "special_rule": null},
+    {"card_id": "retired-promo-001", "name": "Carta de Promocional Aposentada", "category": "pokemon", "stage": "basic", "evolves_from": null, "legal": false, "legal_formats": [], "special_rule": null},
+    {"card_id": "mega-art-ex-01", "name": "Mega Carta Exemplares", "category": "pokemon", "stage": "basic", "evolves_from": null, "legal": true, "legal_formats": ["standard"], "special_rule": {"deck_limit": 1}}
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "version": "f9-v1",
+  "score_type": "heuristic_quality_NOT_winrate",
+  "scale": "0-100",
+  "note": "Nota de QUALIDADE HEURISTICA construida sobre fichas reais do catalogo + amostra real da F7 (meta_snapshots/matchups). NAO e winrate, NAO e previsao estatistica de resultado de torneio e NUNCA deve ser apresentada como tal.",
+  "gates": {
+    "legality": "O validador F3 (scripts/validate_deck.py) roda SEMPRE antes da nota; deck ilegal tem legality=0 e overall=0, com as violacoes citadas."
+  },
+  "dimensions": {
+    "legality": {
+      "weight": 0.10,
+      "description": "Gate de legalidade: 100 se o validador F3 aprova (DECK-001..REST-001, EVOL-001/002); 0 com violacoes nomeadas."
+    },
+    "consistency": {
+      "weight": 0.14,
+      "description": "Motor de mao (draw/search por quantidade), onus de linha de evolucao e presenca EMPIRICA media das picks no nucleo real do corpus F7 (listas que usam a carta principal)."
+    },
+    "speed": {
+      "weight": 0.10,
+      "description": "Tempo para ameacar: dano do ataque principal (>=100 rapido), custo de energia do ataque, aceleracao de evolucao (Rare Candy/Wally) e mobilidade (X Speed)."
+    },
+    "offensive_power": {
+      "weight": 0.13,
+      "description": "Dano real do ataque principal vs HP real das cartas principais dos top-N arquetipos do snapshot (OHKO conta sem ponderar fraqueza — nunca inventa multiplicador)."
+    },
+    "resilience": {
+      "weight": 0.11,
+      "description": "HP real da carta principal, protecao/cura na lista, atacante de reserva e penalidade de risco mega (regra real 'oponente ganha 3 pontos')."
+    },
+    "energy_efficiency": {
+      "weight": 0.09,
+      "description": "Custo real do ataque principal (tamanho e hibridismo de tipos) + mobilidade/aceleracao de energia na lista."
+    },
+    "flexibility": {
+      "weight": 0.08,
+      "description": "Diversidade de funcoes mecanicas (F8) fora da carta principal + presenca de busca + variedade de Supporter."
+    },
+    "recovery": {
+      "weight": 0.07,
+      "description": "Capacidade de reacao apos perder a carta principal: linhas de ataque de reserva, cura e densidade de compra."
+    },
+    "combo_dependency": {
+      "weight": 0.08,
+      "description": "INVERTIDO de proposito: score ALTO = BAIXA dependencia de pecas casadas (cadeia de evolucao curta, mitigada por Rare Candy/Wally/busca)."
+    },
+    "meta_coverage": {
+      "weight": 0.10,
+      "description": "Media ponderada por share dos matchups contra os top-N arquetipos do snapshot (matchup REAL da F7 quando existe; estimativa TEORICA citada quando nao existe)."
+    }
+  }
+}

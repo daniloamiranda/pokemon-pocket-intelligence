@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "x-owner": "tony_stark",
+  "x-stage": "F2",
+  "$id": "https://arcsec.io/schemas/pokemon-pocket/matchup.json",
+  "title": "Matchup - confronto entre arquetipos",
+  "description": "Par (a, b) com taxa de vitoria e evidencia. sample_size e OBRIGATORIO — sem evidencia nao existe matchup (FASE1 §5: amostras diferentes nao sao confronto direto).",
+  "type": "object",
+  "x-version": "2.0.0",
+  "x-skills": [
+    "pokemon-pocket-meta-analyzer",
+    "pokemon-pocket-deck-evaluator"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "archetype_a": {
+      "type": "string"
+    },
+    "archetype_b": {
+      "type": "string"
+    },
+    "win_rate_a_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "sample_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "window_period": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "archetype_a",
+    "archetype_b",
+    "win_rate_a_pct",
+    "sample_size",
+    "window_period",
+    "source_id"
+  ],
+  "additionalProperties": false,
+  "x-example": {
+    "id": "mu-hoopa-sableye-2026-10",
+    "archetype_a": "arch-hoopa-mega-absol",
+    "archetype_b": "arch-mega-sableye",
+    "win_rate_a_pct": 53.1,
+    "sample_size": 6600,
+    "window_period": "2026-10-18",
+    "source_id": "untapped",
+    "confidence": "high"
+  }
+}
