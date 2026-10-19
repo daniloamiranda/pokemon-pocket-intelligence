@@ -14,8 +14,10 @@ import difflib
 import json
 import sqlite3
 import sys
+from pathlib import Path
 
-DB = '/workspace/ARCOS/projetos/pokemon-pocket-intelligence/data/pocket.sqlite'
+# raiz do projeto derivada deste arquivo (portavel; sem caminho absoluto de maquina)
+DB = str(Path(__file__).resolve().parents[2] / 'data' / 'pocket.sqlite')
 
 # ground truth de visao: roda visao multimodal (vision_analyze) por fixture, colada abaixo.
 # data: 2026-10-18. Formato: arquivo -> observacoes

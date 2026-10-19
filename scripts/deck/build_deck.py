@@ -45,6 +45,7 @@ sys.path.insert(0, str(ROOT / "integrations" / "limitlesstcg-pocket"))
 
 import client as f4client      # noqa: E402
 import validate_deck as V3     # noqa: E402
+import card_roles as CR        # noqa: E402  (UX-1/t_bd7c1cc1: papeis + relatorio humano)
 
 DB_PATH = ROOT / "data" / "pocket.sqlite"
 CACHE = ROOT / "data" / "cache" / "pages"
@@ -553,27 +554,17 @@ def attack_of(con, card_id):
     return best
 
 
-def user_guide_main(con, main, n_decks, picks):
-    """Como jogar (TEXTO derivado da ficha, sem inventar annonces)."""
-    att = attack_of(con, main["id"])
-    evo = evolution_chart(con, [p["card_id"] for p in picks])
-    line = [f"1) Abrir com Gastly/linha Básica da família no ativo; a carta principal "
-            f"({main['canonical_name']}) é Mega Evolution arrives do banco." if evo else
-            f"1) Abrir com {main['canonical_name']} no ativo."]
-    if evo.get(main["id"]):
-        pre = dict(con.execute("SELECT canonical_name FROM cards WHERE id=?", (evo[main["id"]],)).fetchone())["canonical_name"]
-        line.append(f"2) Evoluir {pre} -> {main['canonical_name']} (turno 2+ ou via Rare Candy, "
-                    f"pulando o Estágio 1).")
-    if att:
-        dmg = att["damage"] or 0
-        sign = "120" if dmg == 120 else str(dmg)
-        line.append(f"3) Ataque principal: {att['name']} ({sign} de dano; custo "
-                    f"{att['energy_cost']})." + (" O efeito trava os Trainer cards adversários "
-                    "no próximo turno — jogue a pressão de tempo com isso." if
-                    "can't play any trainer" in (att["effect_text"] or "").lower() else ""))
-    line.append(f"4) Supporting empiricamente calibrado do núcleo real de {n_decks} listas: "
-                f"professores/cyrus/braces como linha de consistência do meta.")
-    return "\n".join(line)
+def user_guide_main(con, main, n_decks, picks, curated=None):
+    """UX-1 (card t_bd7c1cc1): "como funciona" em 2-4 linhas, gerado do que o
+    deck REALMENTE contem — linha de evolucao presente na lista, ataque real
+    da principal, motores de compra/busca, apoio e plano de energia.
+
+    Substitui a guia fixa do F8, que citava "Gastly" mesmo em decks sem a
+    carta (defeito confirmado em execucao real no deck-mega-altaria-ex-001:
+    deck tem Swablu/Darkrai/Igglybuff e ZERO Gastly). Toda frase vem de
+    card_roles.how_it_works, que so cita cartas presentes em `picks`.
+    """
+    return CR.how_it_works(con, main, picks, n_decks, curated)
 
 
 def competitive_analysis(con, main, n_decks):
@@ -658,6 +649,9 @@ def main(argv=None):
     ap.add_argument("--days", type=int, default=30, help="janela empirica (padrao 30)")
     ap.add_argument("--list-mains", action="store_true", help="cartas principais suportadas")
     ap.add_argument("--db", default=str(DB_PATH))
+    ap.add_argument("--json", dest="json_out", action="store_true",
+                    help="UX-1: saida JSON estavel para consumidores/agentes "
+                         "(padrao sem --json: relatorio humano, uma linha por carta)")
     args = ap.parse_args(argv)
 
     con = sqlite3.connect(args.db)
@@ -699,8 +693,10 @@ def main(argv=None):
                           "main": maincard["canonical_name"]}, ensure_ascii=False, indent=2))
         return 4
 
+    curated_roles = CR.load_card_roles()
+    card_lines = CR.deck_lines(con, maincard, picks, curated_roles)
     plan_text, _costs = energy_plan(con, maincard)
-    guide_text = user_guide_main(con, maincard, n_decks, picks)
+    guide_text = user_guide_main(con, maincard, n_decks, picks, curated_roles)
     comp = competitive_analysis(con, maincard, n_decks)
 
     veredicto = ("valido" if n_decks >= FALLBACK_THRESHOLD else "fallback")
@@ -718,6 +714,7 @@ def main(argv=None):
         "cards": picks,
         "energy_plan": plan_text,
         "how_to_play": guide_text,
+        "card_lines": card_lines,
         "competitive_analysis": comp,
         "sources": [
             {"id": CORPUS_SOURCE_ID,
@@ -729,6 +726,13 @@ def main(argv=None):
     }
     deck_id = persist(con, spec, picks)
     spec["deck_id"] = deck_id
+    if not args.json_out:
+        # UX-1: saida humana padrao — uma linha por carta (nome+quantidade a
+        # esquerda, papel a direita) + bloco "como funciona". Zero card_id
+        # cru; ids e origem do papel ficam no modo --json.
+        print(CR.human_report(con, maincard, picks, n_decks, deck_id,
+                              spec["name"], curated_roles))
+        return 0
     print(json.dumps({"veredicto": spec["veredicto"],
                       "deck_id": deck_id,
                       "confidence_level": spec["confidence_level"],
@@ -740,6 +744,7 @@ def main(argv=None):
                       "cards": picks,
                       "energy_plan": plan_text,
                       "how_to_play": guide_text,
+                      "card_lines": card_lines,
                       "competitive_analysis": comp,
                       "sources": spec["sources"]},
                      ensure_ascii=False, indent=2))

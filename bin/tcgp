@@ -1,0 +1,360 @@
+#!/usr/bin/env python3
+"""tcgp — comando curto, ponto unico de entrada do Pokemon TCG Pocket Intelligence (UX-2).
+
+Sem dependencia nova: so stdlib. Resolve a raiz do repo a partir do PROPRIO
+caminho (nunca exige cd nem caminho absoluto do usuario), prefere o venv do
+projeto (.venv/bin/python) e cai para python3 do sistema com aviso claro.
+
+Subcomandos (todos aceitam --json para uso por agentes):
+  tcgp <carta>            FLUXO COMPLETO: monta o deck, valida legalidade,
+                          avalia contra o meta e imprime "como funciona".
+      --copiar            fluxo completo numa COPIA do banco (nao grava no canonico).
+  tcgp deck <carta>       so monta (persiste no banco canonico; padrao F8).
+      --copiar            roda numa COPIA do banco (backup sidecar) e NAO grava nada.
+  tcgp eval <carta|deck_id>  so avalia (nota heuristica + matchups; NAO e winrate).
+      --no-persist        padrao do tcgp: leitura pura (BUG-002 recusa escrita automatica em producao).
+  tcgp meta [--top N]     panorama do meta (arquetipos, tiers, amostra) do snapshot atual.
+  tcgp cartas <busca>     consulta o catalogo (nome, elemento ou trecho de efeito).
+  tcgp refresh --check    checa atualizacao das fontes oficiais (REDE, manual —
+                          nunca em runtime, nunca cron). rc=0 igual, rc=10 mudou.
+
+Codigos de saida (dos motores, repassados 1:1):
+  0 ok · 2 carta/deck inexistente ou uso invalido · 3 montagem inconsistente
+  · 4 ilegal · 10 refresh: fonte mudou · 3 refresh: sem conexao · 4 refresh: falha de captura
+  · 64 uso invalido do tcgp · 127 dependencia ausente
+"""
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import sqlite3
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+RC_OK, RC_USAGE, RC_MISSING = 0, 64, 127
+
+
+def find_repo_root() -> Path:
+    """Raiz do repo resolvida a partir do proprio script (bin/ -> pai)."""
+    here = Path(__file__).resolve()
+    if here.name != "tcgp":
+        print("tcgp: erro interno — wrapper deve chamar-se 'tcgp'", file=sys.stderr)
+        raise SystemExit(RC_USAGE)
+    root = here.parent.parent
+    if not (root / "scripts" / "deck" / "build_deck.py").is_file():
+        print(f"tcgp: raiz do repo nao encontrada a partir de {here} "
+              f"(esperado {root}/scripts/deck/build_deck.py)", file=sys.stderr)
+        raise SystemExit(RC_MISSING)
+    return root
+
+
+ROOT = find_repo_root()
+DB = ROOT / "data" / "pocket.sqlite"
+
+
+def resolve_python() -> str:
+    """Venv do projeto quando existir; senao python3 do sistema (aviso claro)."""
+    venv = ROOT / ".venv" / "bin" / "python"
+    if venv.is_file():
+        return str(venv)
+    print("[tcgp] aviso: .venv do projeto nao encontrada — usando python3 do "
+          "sistema; se um modulo faltar, rode: "
+          "python3 -m venv .venv && .venv/bin/pip install -e .", file=sys.stderr)
+    return "python3"
+
+
+PY = resolve_python()
+
+
+def run(script_args: list[str]) -> int:
+    """Executa o motor como subprocesso e REPASSA o rc 1:1 (sem reinterpretar)."""
+    p = subprocess.run([PY, *script_args])
+    return p.returncode
+
+
+def out(*lines: str) -> None:
+    print("\n".join(lines))
+
+
+def db_copy() -> Path:
+    """Copia fresca do banco canonico (backup API sqlite3) para execucao sem gravacao."""
+    if not DB.is_file():
+        out(f"tcgp: banco canonico ausente: {DB}",
+            "      rode scripts/collect_pocket.py para popular o catalogo.")
+        raise SystemExit(RC_MISSING)
+    tmp = Path(tempfile.mkdtemp(prefix="tcgp-copy-"))
+    dst = tmp / DB.name
+    src = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    dst_db = sqlite3.connect(str(dst))
+    src.backup(dst_db)
+    dst_db.close()
+    src.close()
+    return dst
+
+
+def print_help() -> None:
+    out(__doc__.strip())
+
+
+# ---------------------------------------------------------------------------
+# fluxo completo: builder -> evaluator (leitura) -> resumo
+# ---------------------------------------------------------------------------
+
+def cmd_full(args: list[str]) -> int:
+    copy = "--copiar" in args
+    rest = [a for a in args if a != "--copiar"]
+    if not rest:
+        print("tcgp: informe a carta principal. Ex.: tcgp \"Mega Altaria ex\"", file=sys.stderr)
+        return RC_USAGE
+    card = rest[0]
+    rest = [a for a in rest[1:] if a != "--json"]
+    use_json = "--json" in args
+
+    if copy:
+        cp = db_copy()
+        build_argv = [str(ROOT / "scripts" / "deck" / "build_deck.py"), card,
+                      *rest, "--json", "--db", str(cp)]
+    else:
+        build_argv = [str(ROOT / "scripts" / "deck" / "build_deck.py"), card,
+                      *rest, "--json"]
+    build = subprocess.run([PY, *build_argv], capture_output=True, text=True)
+    if build.returncode != 0:
+        sys.stdout.write(build.stdout)
+        sys.stderr.write(build.stderr)
+        return build.returncode
+
+    try:
+        bj = json.loads(build.stdout)
+    except json.JSONDecodeError:
+        sys.stdout.write(build.stdout)
+        return RC_OK
+
+    ev_argv = [str(ROOT / "scripts" / "eval" / "evaluate_deck.py"),
+               "--deck-id", bj["deck_id"], "--no-persist"]
+    if copy:
+        ev_argv += ["--db", str(cp)]
+    ev = subprocess.run([PY, *ev_argv], capture_output=True, text=True)
+    if copy:
+        shutil.rmtree(cp.parent, ignore_errors=True)
+    ej = {}
+    if ev.returncode == 0:
+        try:
+            ej = json.loads(ev.stdout)
+        except json.JSONDecodeError:
+            ej = {}
+
+    if use_json:
+        merged = dict(bj)
+        merged["evaluation"] = ej if ej else None
+        print(json.dumps(merged, ensure_ascii=False, indent=2))
+        return RC_OK
+
+    print(f"=== {bj['deck_id']} · {bj['main_card']} — fluxo completo tcgp ===")
+    for cl in bj.get("card_lines", []):
+        print(cl["human_line"])
+    print("-- como funciona --")
+    print(bj["how_to_play"])
+    print()
+    print("Nota do avaliador (QUALIDADE HEURISTICA 0-100 — NAO e winrate):")
+    if ej:
+        print(f"  {ej['score']['overall']}/100 (confianca {ej.get('evidence', {}).get('confidence', 'n/d')})")
+        print()
+        print("Matchups (top 5 do relatorio completo; ver --json para evidencia):")
+        for m in ej.get("matchups", [])[:5]:
+            ev = (m.get("evidence") or {})
+            kind = ev.get("kind", "?") if isinstance(ev, dict) else "?"
+            print(f"  - {m.get('archetype_name', '?')} [tier {m.get('tier', '?')}]: "
+                  f"score {m.get('score', '?')} (evidencia: {kind})")
+    else:
+        print("  (avaliacao indisponivel — deck montado e valido; rc do evaluator acima)")
+    return RC_OK
+
+
+# ---------------------------------------------------------------------------
+# deck / eval / meta / cartas / refresh
+# ---------------------------------------------------------------------------
+
+def cmd_deck(args: list[str]) -> int:
+    copy = "--copiar" in args
+    argv = [a for a in args if a != "--copiar"]
+    if not argv:
+        print('tcgp deck: informe a carta. Ex.: tcgp deck "Mega Altaria ex"', file=sys.stderr)
+        return RC_USAGE
+    if copy:
+        cp = db_copy()
+        rc = run([str(ROOT / "scripts" / "deck" / "build_deck.py"), *argv, "--db", str(cp)])
+        shutil.rmtree(cp.parent, ignore_errors=True)
+        return rc
+    return run([str(ROOT / "scripts" / "deck" / "build_deck.py"), *argv])
+
+
+def cmd_eval(args: list[str]) -> int:
+    if not args:
+        print('tcgp eval: informe carta ou deck_id. Ex.: tcgp eval "Mega Altaria ex" '
+              '| tcgp eval deck-mega-altaria-ex-001', file=sys.stderr)
+        return RC_USAGE
+    target, rest = args[0], [a for a in args[1:] if a != "--json"]
+    use_json = "--json" in args
+    if target.startswith("deck-"):
+        script_args = ["--deck-id", target]
+    else:
+        script_args = ["--name", target]
+    if not use_json:
+        print("[tcgp eval: leitura pura — nada gravado no banco canonico; a nota 0-100 e "
+              "heuristica e NAO e winrate.]", file=sys.stderr)
+    return run([str(ROOT / "scripts" / "eval" / "evaluate_deck.py"),
+                *script_args, "--no-persist", *rest])
+
+
+def cmd_meta(args: list[str]) -> int:
+    top = 10
+    if "--top" in args:
+        i = args.index("--top")
+        try:
+            top = int(args[i + 1])
+        except (IndexError, ValueError):
+            print("tcgp meta: --top exige um numero. Ex.: tcgp meta --top 3", file=sys.stderr)
+            return RC_USAGE
+        args = args[:i] + args[i + 2:]
+    use_json = "--json" in args
+
+    if not DB.is_file():
+        out(f"tcgp meta: banco canonico ausente: {DB}",
+            "      rode scripts/collect_pocket.py + scripts/meta/meta_pipeline.py primeiro.")
+        return RC_MISSING
+    con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    con.row_factory = sqlite3.Row
+    snap = con.execute("SELECT * FROM meta_snapshots ORDER BY id DESC LIMIT 1").fetchone()
+    if snap is None:
+        out("tcgp meta: nenhum snapshot do meta no banco.",
+            "      rode scripts/meta/collect_meta.py + scripts/meta/meta_pipeline.py primeiro.")
+        con.close()
+        return RC_MISSING
+    rows = con.execute(
+        """SELECT msa.archetype_id, ma.name, msa.share_pct, msa.win_rate_pct, msa.tier,
+                  msa.sample_decks, msa.sample_matches
+           FROM meta_snapshot_archetypes msa
+           LEFT JOIN meta_archetypes ma ON ma.id = msa.archetype_id
+           WHERE msa.snapshot_id = ? ORDER BY msa.share_pct DESC LIMIT ?""",
+        (snap["id"], top)).fetchall()
+    if use_json:
+        print(json.dumps({"snapshot_id": snap["id"],
+                          "window": f"{snap['window_start']}..{snap['window_end']}",
+                          "tournament_count": snap["tournament_count"],
+                          "decklist_count": snap["decklist_count"],
+                          "archetypes": [dict(r) for r in rows]},
+                         ensure_ascii=False, indent=2))
+    else:
+        out(f"Meta — snapshot {snap['id']} (janela {snap['window_start']}..{snap['window_end']}, "
+            f"{snap['tournament_count']} torneios, {snap['decklist_count']} listas)",
+            "share = fatia das listas do snapshot; win_rate = do ARQUETIPO em torneio "
+            "(nao e previsao para o SEU deck); tier = regra F7 v1.", "")
+        w = max((len(r["name"] or r["archetype_id"]) for r in rows), default=8)
+        for r in rows:
+            name = r["name"] or r["archetype_id"]
+            wr = f"{r['win_rate_pct']:.1f}%" if r["win_rate_pct"] is not None else "  n/d"
+            print(f"  [{r['tier'] or '?'}] {name:<{w}}  share {r['share_pct']:>5.2f}%  "
+                  f"win_rate {wr:>6}  ({r['sample_decks']} listas, {r['sample_matches']} jogos)")
+    con.close()
+    return RC_OK
+
+
+def cmd_cartas(args: list[str]) -> int:
+    if not args:
+        print('tcgp cartas: informe a busca. Ex.: tcgp cartas "Pikachu"', file=sys.stderr)
+        return RC_USAGE
+    q, rest = args[0], [a for a in args[1:] if a != "--json"]
+    use_json = "--json" in args
+    if not DB.is_file():
+        out(f"tcgp cartas: banco canonico ausente: {DB}",
+            "      rode scripts/collect_pocket.py para popular o catalogo.")
+        return RC_MISSING
+    con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
+    con.row_factory = sqlite3.Row
+    elems = [r["element"] for r in con.execute("SELECT DISTINCT element FROM cards")]
+    if q.lower() in elems:
+        rows = con.execute(
+            "SELECT id, canonical_name, category, element, hp FROM cards "
+            "WHERE element = ? ORDER BY canonical_name LIMIT 40", (q.lower(),)).fetchall()
+    else:
+        # busca FTS5 sobre nome+texto; prefixo* para digitar parcial
+        rows = con.execute(
+            "SELECT c.id, c.canonical_name, c.category, c.element, c.hp "
+            "FROM cards_fts f JOIN cards c ON c.id = f.card_id "
+            "WHERE cards_fts MATCH ? ORDER BY rank LIMIT 40", (f"{q}*",)).fetchall()
+        if not rows:
+            rows = con.execute(
+                "SELECT id, canonical_name, category, element, hp FROM cards "
+                "WHERE canonical_name LIKE ? ORDER BY canonical_name LIMIT 40",
+                (f"%{q}%",)).fetchall()
+    if use_json:
+        print(json.dumps({"query": q, "matches": len(rows),
+                          "cards": [dict(r) for r in rows]},
+                         ensure_ascii=False, indent=2))
+    elif rows:
+        print(f"{len(rows)} carta(s) para '{q}' (ate 40):")
+        for r in rows:
+            hp = f"{r['hp']} HP" if r["hp"] else r["category"]
+            print(f"  {r['id']:<22} {r['canonical_name']:<28} [{r['category']}/"
+                  f"{r['element'] or '-'}] {hp}")
+    else:
+        print(f"0 cartas para '{q}'.")
+    con.close()
+    return RC_OK
+
+
+def cmd_refresh(args: list[str]) -> int:
+    if "--check" not in args:
+        out("tcgp refresh: este subcomando usa REDE e e MANUAL (manutencao).",
+            "So rode quando quiser atualizar as fontes oficiais. Uso:",
+            '  tcgp refresh --check',
+            "(nunca em runtime, nunca cron — diretriz do card t_fafb754f).",
+            "",
+            "O motor precisa do SDK Composio, que pode nao estar no venv do projeto.",
+            "Aponte o interpretador correto se houver falha de conexao (codigo 3):",
+            "  TCGP_REFRESH_PYTHON=/caminho/com/composio/bin/python tcgp refresh --check")
+        return RC_USAGE
+    print("[tcgp refresh] ATENCAO: rede real via Firecrawl/Composio (modo manutencao). "
+          "Isto NAO roda em runtime nem cron.", file=sys.stderr)
+    py = os.environ.get("TCGP_REFRESH_PYTHON", PY)
+    if py != PY:
+        print(f"[tcgp refresh] interpretador alternativo: {py}", file=sys.stderr)
+    p = subprocess.run([py, str(ROOT / "scripts" / "rules_refresh.py")])
+    return p.returncode
+
+
+def main() -> int:
+    argv = sys.argv[1:]
+    if not argv or argv[0] in ("-h", "--help", "help"):
+        print_help()
+        return RC_OK
+    if argv[0] in ("--json", "-j"):
+        # tcgp --json <carta> == tcgp <carta> --json (fluxo completo em JSON)
+        rest = argv[1:]
+        if not rest:
+            print_help()
+            return RC_OK
+        return cmd_full(rest + ["--json"])
+    cmd, rest = argv[0], argv[1:]
+    if cmd == "deck":
+        return cmd_deck(rest)
+    if cmd == "eval":
+        return cmd_eval(rest)
+    if cmd == "meta":
+        return cmd_meta(rest)
+    if cmd == "cartas":
+        return cmd_cartas(rest)
+    if cmd == "refresh":
+        return cmd_refresh(rest)
+    if cmd == "--check":
+        # conveniencia: tcgp --check == tcgp refresh --check
+        return cmd_refresh(["--check"])
+    # subcomando desconhecido = carta para o fluxo completo
+    return cmd_full(argv)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

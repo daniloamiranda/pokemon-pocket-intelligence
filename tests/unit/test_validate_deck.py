@@ -15,7 +15,7 @@ import sys
 import unittest
 from pathlib import Path
 
-WORKSPACE = Path("/workspace/ARCOS/projetos/pokemon-pocket-intelligence")
+WORKSPACE = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(WORKSPACE / "scripts"))
 
 from validate_deck import validate_deck, RULE_IDS  # noqa: E402

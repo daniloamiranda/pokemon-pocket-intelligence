@@ -270,3 +270,13 @@ manual (`scripts/rules_refresh.py`), nunca dependencia de runtime. A guarda
 # Esperado: Ran 17 tests ... OK (idem no interprete do sistema)
 ```
 
+## 11. Guarda UX-1 — saída do deck-builder (card t_bd7c1cc1)
+
+`tests/unit/test_ux1_deck_output.py` (10 testes, somente-leitura sobre cópia
+via backup API — produção md5-intocada): guia anti-fantasma (citou carta
+fora da lista de 20 = reprova; caso Gastly), papel não vazio por carta,
+evidência contida no effect_text real (derived) ou no cache F4 (curado),
+vocabulário fechado para rótulos neutros, saída humana com 1 linha por
+carta distinta somando 20 e `--json` estável. Prova de falha: mutação
+controlada reintroduzindo "Abra com Gastly" reprova test_01/test_02;
+restauração byte-exata volta a verde.

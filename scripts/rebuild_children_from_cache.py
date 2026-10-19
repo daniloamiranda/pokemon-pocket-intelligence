@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """F4c etapa 3 (atualizado F5d): rebuild dos filhos 100% offline usando o
-CACHE PERSISTENTE do projeto (data/cache/pages) e, como fonte historica
-de prova, /opt/data/pocket_probe/pages/pages. Duas execucoes, contagens
-identicas = loader idempotente provado."""
+CACHE PERSISTENTE do projeto (data/cache/pages) e, opcionalmente, uma fonte
+historica de prova externa ao repo apontada pela variavel TCGP_LEGACY_CACHE
+(se definida e existente). Duas execucoes, contagens identicas = loader
+idempotente provado."""
 import sys, os, time
 from pathlib import Path
 
-ROOT = Path("/workspace/ARCOS/projetos/pokemon-pocket-intelligence")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "integrations" / "limitlesstcg-pocket"))
 import sqlite3, json, hashlib
@@ -15,7 +16,8 @@ import loader as L
 import client as C
 
 PERSISTENT = ROOT / "data" / "cache" / "pages"
-CACHES = [PERSISTENT, Path("/opt/data/pocket_probe/pages/pages")]
+_LEGADO = os.environ.get("TCGP_LEGACY_CACHE", "")
+CACHES = [PERSISTENT] + ([Path(_LEGADO)] if _LEGADO and Path(_LEGADO).is_dir() else [])
 MAIN = ROOT / "data" / "pocket.sqlite"
 SETS = ["A1","A1a","A2","A2a","A2b","A3","A3a","A3b","A4","A4a","A4b",
         "B1","B1a","B2","B2a","B2b","B3","B3a","B3b","B4","B4a","B4b","P-A","P-B"]

@@ -23,7 +23,8 @@ Ponto unico de sincronizacao do catalogo (docs/SYNC.md). Arquitetura:
 Credencial: COMPOSIO_API_KEY no .env do perfil c3po (lida por sync.py; nunca ecoada).
 
 Uso:
-    /opt/data/f5_venv/bin/python integrations/google-sheets/export_catalog.py [--dry-run] [--force]
+    <python com composio==0.22.0, ex.: venv do projeto> \
+        integrations/google-sheets/export_catalog.py [--dry-run] [--force]
 """
 import os, sys, json, time, hashlib, sqlite3
 
@@ -32,8 +33,8 @@ sys.path.insert(0, _HERE)
 import sync  # noqa: E402
 
 SPID = sync.SPREADSHEET_ID
-DB_PATH = '/workspace/ARCOS/projetos/pokemon-pocket-intelligence/data/pocket.sqlite'
 ROOT = os.path.dirname(os.path.dirname(_HERE))  # raiz do projeto
+DB_PATH = os.path.join(ROOT, 'data', 'pocket.sqlite')
 LEDGER_DB = os.environ.get('F5D_LEDGER_DB', os.path.join(ROOT, 'data', 'sync_state.sqlite'))
 LEDGER_HEADER_COMMENT = (
     'LEDGER de sincronizacao (F5d): apenas sync_jobs, sync_changes, '

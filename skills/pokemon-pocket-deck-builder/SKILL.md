@@ -48,9 +48,29 @@ A partir de UMA carta principal, montar uma lista de 20 cartas LEGAL
    quando a montagem nao fecha 20/20 ou reprova o F3 — nunca persiste ilegal.
 
 ## Uso
+**Caminho oficial (UX-2, card t_2d795bb4): comando curto `bin/tcgp`** — ponto
+unico de entrada que orquestra builder + validador + evaluator + meta:
 ```bash
-# deck a partir do nome (FTS5) — saida JSON com tudo
+# FLUXO COMPLETO: monta, valida, avalia e explica "como funciona"
+bin/tcgp "Mega Gengar ex"
+
+# so montar (gravando no canonico) ou numa copia do banco (sem gravar)
+bin/tcgp deck "Mega Gengar ex"
+bin/tcgp deck "Mega Gengar ex" --copiar
+
+# so avaliar (nota heuristica + matchups; NAO e winrate; leitura pura)
+bin/tcgp eval deck-mega-gengar-ex-001
+bin/tcgp eval "Mega Gengar ex" --json
+```
+Guia do usuario: `docs/USAGE.md` (saidas reais coladas). Os comandos diretos
+abaixo continuam validos para quem opera os motores isoladamente:
+
+```bash
+# deck a partir do nome (FTS5) — relatorio humano (uma linha por carta)
 python3 scripts/deck/build_deck.py "Mega Gengar ex"
+
+# saida JSON para agentes/consumidores (formato estavel + card_lines)
+python3 scripts/deck/build_deck.py "Mega Gengar ex" --json
 
 # deck a partir do card_id exato
 python3 scripts/deck/build_deck.py --card-id limitless:B2b/39
@@ -62,18 +82,34 @@ python3 scripts/deck/build_deck.py "Hoopa ex" --days 7
 python3 scripts/deck/build_deck.py --list-mains
 ```
 
-## Saida (formato da secao 16 do escopo)
-JSON com: veredicto/confidence/empirical_decks/window_days; legality +
-satisfied_rules (citacao das regras F3); main_card (ficha real); cards[]
-(cada uma com quantity/function/reason/real_decks/copies_in_corpus);
-energy_plan; how_to_play; competitive_analysis (arquétipos reais com tier e
-amostra da F7; sem tier = análise teórica declarada); sources.
+## Saida (formato UX-1, card t_bd7c1cc1)
+PADRAO (sem flag): relatorio humano — uma linha por carta distinta com
+NOME+quantidade a esquerda e papel a direita ("2x Professor's Research —
+Acelerar o jogo (comprar cartas)"), seguido do bloco "como funciona" (2-4
+linhas geradas do que o deck REALMENTE contem: linha de evolucao presente,
+ataque real da principal, motores, apoio e plano de energia; zero carta
+fantasma — a guia que citasse carta ausente reprova a guarda da suite,
+caso Gastly no deck do Mega Altaria ex).
+
+--json: formato estavel do F8 (veredicto/confidence/empirical_decks/
+window_days; legality + satisfied_rules; main_card; cards[] com
+quantity/function/reason; energy_plan; how_to_play; competitive_analysis;
+sources) + `card_lines[]` ADITIVO — cada entrada com card_id, name,
+quantity, role, role_origin (curated | derived_text | neutral |
+uncataloged), role_evidence e source (origem do papel citada por linha).
+
+Fonte do papel (anti-invencao): Pokemon = effect_text real da ficha mapeado
+por vocabulario fechado (scripts/deck/card_roles.py); treinadores/ferramentas/
+estadios = tabela curada data/card_roles.yaml (text_evidence transcrito do
+cache F4 e vigiado pela suite); sem casamento = rotulo neutro do vocabulario
+ou "Papel nao catalogado" explicito — jamais texto inventado.
 
 ## Antes de confiar nos números
 - Amostra empírica < 12 listas → veredicto `fallback`: a LISTA é legal, a
   CLAIM de meta é fraca (declarado, never hidden).
 - popularidade (share) ≠ desempenho (tier) — como na F7.
-- Texto de Trainer/Tool pode estar vazio se não estiver no cache (falta de
-  dados declarada, não gap silencioso).
+- Papel de Trainer/Tool fora da tabela curada aparece como "Papel nao
+  catalogado" (declarado, nunca inventado) — complete data/card_roles.yaml
+  com text_evidence real do cache F4.
 - Nothing about Gengar is fake: 12 listas reais de Mega Gengar ex existem no
   corpus e a amostra é citada em cada número do output.

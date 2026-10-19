@@ -21,6 +21,7 @@ database/backups/
 # Coleta bruta e cache (dados de terceiros, nao redistribuir)
 data/*
 !data/collection_report.json
+!data/card_roles.yaml
 cache/
 evidence/
 raw/

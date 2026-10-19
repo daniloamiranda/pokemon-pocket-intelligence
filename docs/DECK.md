@@ -161,3 +161,30 @@ Correções aplicadas:
    `audit_logs` (`decks` FK CASCADE); corpus real auditado por nome.
 6. Deck do Mega Gengar ex regerado (20 cartas, 10 entradas, linha sombria
    coerente Gastly B2b/37 + Haunter B2b/38, 7/7 regras citadas).
+
+## 10. Saída UX-1: papel por carta e "como funciona" (card t_bd7c1cc1)
+
+A saída padrão do builder é relatório humano: uma linha por carta distinta,
+nome+quantidade à esquerda e papel curto à direita, alinhados; card_id cru
+só aparece em `--json` (campo `card_lines[]`, com `role_origin` citando a
+origem do papel por linha). O "como funciona" (2-4 linhas) substitui a guia
+fixa do F8 — que citava "Gastly" em deck do Mega Altaria ex sem a carta —
+e é gerado exclusivamente do que a lista contém: linha de evolução presente,
+ataque real da principal, motores de compra/busca, apoio e plano de energia.
+
+Fontes do papel (anti-invenção):
+- Pokémon: `effect_text` real (card_attacks/card_abilities) mapeado por
+  vocabulário fechado em `scripts/deck/card_roles.py`; a evidência (trecho
+  casado) viaja na saída. Sem casamento: rótulo neutro do vocabulário
+  (ex.: "Atacante de dano direto", ancorado no dano real da ficha).
+- Treinadores/ferramentas/estádios: tabela curada `data/card_roles.yaml`
+  (versionada; 45 entradas — 13 observadas nos decks gerados + top do
+  corpus), cada uma com `text_evidence` transcrito do cache F4 e vigiado
+  pela guarda (test_ux1_deck_output.py). Entrada ausente = "Papel não
+  catalogado" explícito, jamais texto inventado.
+
+Guardas de regressão (tests/unit/test_ux1_deck_output.py, 10 testes): guia
+que cite carta ausente reprova (caso Gastly); toda carta tem papel não
+vazio; papel derivado exige evidência contida no texto real; display curado
+só cita números presentes no text_evidence; saída humana = 1 linha por
+carta distinta somando 20; `--json` permanece estável (aditivo).

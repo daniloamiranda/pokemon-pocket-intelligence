@@ -4,6 +4,42 @@ Plataforma permanente de inteligencia estrategica para **Pokemon TCG Pocket** (o
 
 > Escopo estrito: **somente Pokemon TCG Pocket**. Nao cobre Pokemon TCG fisico, TCG Live nem TCG Online. Uma carta so entra no catalogo se existir oficialmente no Pocket.
 
+## Como usar
+
+A forma natural de pedir um deck e pelo nome da carta: **"Use o tcgp-deck-builder para criar um deck baseado na carta X"** — que na linha de comando vira o comando curto `bin/tcgp`, ponto unico de entrada de todo o fluxo (montar, validar, avaliar, consultar):
+
+```bash
+bin/tcgp "Mega Altaria ex"          # FLUXO COMPLETO: monta, valida, avalia e explica
+```
+
+| Comando | O que faz | Exemplo real |
+|---|---|---|
+| `tcgp <carta>` | **Fluxo completo**: monta o deck, valida legalidade, avalia contra o meta e imprime o "como funciona" | `bin/tcgp "Mega Altaria ex"` |
+| `tcgp deck <carta>` | So monta o deck (gravando no catalogo; adicione `--copiar` para rodar numa copia, sem gravar) | `bin/tcgp deck "Mega Altaria ex" --copiar` |
+| `tcgp eval <carta ou deck_id>` | So avalia: nota 0-100 **heuristica de qualidade (NAO e winrate)** + matchups | `bin/tcgp eval deck-mega-altaria-ex-001` |
+| `tcgp meta [--top N]` | Panorama do meta: arquetipos, tier, share e win_rate de torneio com amostra | `bin/tcgp meta --top 3` |
+| `tcgp cartas <busca>` | Consulta o catalogo (nome, elemento ou trecho de efeito) | `bin/tcgp cartas "Pikachu"` |
+| `tcgp refresh --check` | Checa atualizacao das fontes oficiais (usa REDE; manual, nunca em runtime/cron) | `bin/tcgp refresh --check` |
+
+O que cada saida significa:
+
+- **`tcgp <carta>`**: lista de 20 cartas (uma linha por carta com o papel dela), o bloco
+  "como funciona" gerado do que o deck realmente contem, a nota do avaliador
+  (qualidade heuristica 0-100 — nao e winrate) e os top-5 matchups.
+- **`tcgp meta`**: tier [S/A/B/C/D] pela regra F7, `share` = fatia das listas do snapshot,
+  `win_rate` = do arquetipo em torneio (nao e previsao para o SEU deck), com amostra.
+- **`tcgp cartas`**: impressoes no catalogo com id (ex.: `limitless:A1/94`) para usar
+  em consultas exatas.
+- **Saidas para agentes**: todo subcomando aceita `--json` (contrato estavel).
+- **Codigos de saida**: `0` ok · `2` carta/deck inexistente · `3` montagem inconsistente
+  ou refresh sem conexao · `4` ilegal ou falha de captura · `10` refresh detectou mudanca
+  · `64` uso invalido · `127` dependencia ausente.
+
+Passo a passo completo e exemplos colados da execucao real: `docs/USAGE.md`.
+Sem dependencia nova (stdlib pura); o wrapper usa o `.venv` do projeto quando existe e
+cai para o `python3` do sistema com aviso claro. Rode de qualquer diretorio — a raiz do
+repo e resolvida a partir do proprio script.
+
 ## O que o sistema faz
 
 1. Conhece as regras oficiais do Pocket e valida legalidade de decks.
