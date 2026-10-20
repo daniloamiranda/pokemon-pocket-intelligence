@@ -75,6 +75,28 @@ Formato `MAJOR.MINOR.PATCH` ([SemVer](https://semver.org/lang/pt-BR/)):
 
 ## Histórico de releases
 
+- **2026-10-20** — **v0.2.1** (patch: portabilidade; sem capacidade nova).
+  - Commit público `01a6941` "Release v0.2.1 — portability: no host paths in
+    the published tree" (árvore do commit interno `a5edf36`, card PORT
+    t_b30fbe58); tag anotada `v0.2.1` e GitHub Release
+    (`/releases/tag/v0.2.1`, notas com as 5 limitações declaradas).
+  - Motivo: o snapshot da v0.2.0 (`fd33e17`) retinha resíduo de caminho
+    interno — 56 linhas em 24 arquivos (docs de procedimento e defaults de
+    manutenção), declarado nas notas daquela release e sanado no commit
+    interno `a5edf36`. Este patch publica a árvore já saneada.
+  - Verificação do publicado (clone anônimo, sem token): 110 arquivos;
+    zero `.webp/.png/.jpg/.jpeg/.gif/.sqlite/.db/.env`; **zero** caminho do
+    host (`/home/...`, `/opt/data/...`, `/workspace/...`); **zero** padrão de
+    credencial/chave; paridade blob-sha **110/110** contra o HEAD canônico;
+    `LICENSE` (MIT) presente; `bin/tcgp` modo 755.
+  - Prova `tcgp` no clone anônimo: `--help` rc=0; sem catálogo (banco não
+    versionado) `"Mega Altaria ex" --copiar` e `meta --top 3` recusam com
+    rc=127 e a instrução de construção — comportamento honesto esperado.
+    Com catálogo local (banco copiado para o clone, fora do versionamento):
+    fluxo completo rc=0 com **papel por carta** (`deck-mega-altaria-ex-005`,
+    sem carta fantasma) e `meta --top 3` rc=0 (snapshot snap-full-2026-10-19).
+  - Fonte de dados de terceiros: nenhuma arte/banco redistribuído.
+
 - **2026-10-19** — **v0.1.0 (retroativa)** e **v0.2.0**.
   - `v0.1.0` → commit público `2fdca07` "Initial public release"
     (102 arquivos; árvore do commit interno `898a5f3`). Tag anotada
