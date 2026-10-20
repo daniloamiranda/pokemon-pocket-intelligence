@@ -44,7 +44,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts" / "eval"))
 
 PROD_DB = ROOT / "data" / "pocket.sqlite"
-VENV_PY = Path("/opt/data/f5_venv/bin/python3")
+# Portavel: venv do projeto no proprio checkout; override por TCGP_VENV_PY.
+VENV_PY = Path(os.environ.get("TCGP_VENV_PY", ROOT / ".venv" / "bin" / "python3"))
 INTERP = str(VENV_PY) if VENV_PY.is_file() else sys.executable
 
 

@@ -61,8 +61,9 @@ Todo veredicto `ok` carrega `confianca` (alta | média) + `score` (0..1);
    quando houver; caso contrário resolve identidade e aponta os prints.
 2. Execução de visão é manual (`vision_analyze` na sessão do agente), não from CLI do
    script — a observação entra por `--observation` (inline, `@arquivo` ou stdin).
-3. Repositório protege `HERMES_WRITE_SAFE_ROOT`; escrever no repo exige copiar de
-   `/opt/data` (padrão já usado por F4b/F4c/F5/F5b).
+3. Repositório protege `HERMES_WRITE_SAFE_ROOT`; escrever no repo exige preparar
+   os arquivos na área de trabalho (scratch) do executor e copiá-los para a árvore
+   (padrão já usado por F4b/F4c/F5/F5b).
 
 ## Evidências
 - Suíte: `python3 -m unittest discover tests` -> **41/41 OK** (35 pré-existentes + 6 novos).

@@ -7,11 +7,12 @@ Ultima execucao real: 2026-10-19 (F11, job f5b_20261019T123010Z)
 ## 1. Credencial e escopo (PROIBIDOS)
 
 - A chave COMPOSIO_API_KEY vive apenas no .env do perfil c3po
-  (/home/hermes/.hermes/profiles/c3po/.env) e e lida em tempo de execucao
+  (default `~/.hermes/profiles/c3po/.env` — raiz Hermes do usuario; override
+  C3PO_ENV) e e lida em tempo de execucao
   pelo helper. NUNCA ecoar/imprimir/logar.
 - OAuth e fornecido pela conta Composio gerenciada. Proibido criar app OAuth proprio.
 - Nenhum segredo vai para a planilha.
-- Escopo de escrita do projeto (R2): apenas /workspace/ARCOS/projetos/pokemon-pocket-intelligence.
+- Escopo de escrita do projeto (R2): apenas a arvore deste repositorio (checkout local).
 
 ## 2. Alvo fixo
 
@@ -24,7 +25,7 @@ Ultima execucao real: 2026-10-19 (F11, job f5b_20261019T123010Z)
 
 ## 3. Toolchain
 
-SDK: composio==0.22.0 (python /opt/data/f5_venv). Toolkit version pinada: 20261018_00.
+SDK: composio==0.22.0 (python <venv do projeto>). Toolkit version pinada: 20261018_00.
 Ferramentas usadas: GOOGLESHEETS_CREATE_GOOGLE_SHEET1, GOOGLESHEETS_ADD_SHEET,
 GOOGLESHEETS_BATCH_UPDATE, GOOGLESHEETS_CLEAR_VALUES, GOOGLESHEETS_FORMAT_CELL,
 GOOGLESHEETS_GET_SHEET_NAMES.

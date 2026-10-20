@@ -244,7 +244,7 @@ Continuam `sem_evidencia` no full: 555 arquetipos — os maiores quase-gates:
 
 - Coleta real: 19/10/2026 — 200 torneios POCKET (2026-09-09..2026-10-18),
   torneio de 355 players com 355/355 standings + 355 listas de 20 cartas +
-  355 deck.id (JSON salvos em /opt/data/f7, prova no cartão).
+  355 deck.id (JSON salvos na área de trabalho local do executor; prova no cartão).
 - F7b (19/10/2026): causa-raiz medida (janela 30d × coleta 35d →
   `fora_da_janela`); re-ingestão idempotente `--full` a partir do raw (zero
   rede; 2ª execução não mudou 1 contagem — 123/8.622/24.984/115.741 lidos de

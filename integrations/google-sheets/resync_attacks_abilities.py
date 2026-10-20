@@ -3,7 +3,8 @@
 first_cell_location A1 (o wrapper padrao do sync quebra na aba grande).
 Protocolo: clear total -> write em chunks -> read back -> assert totais."""
 import sys, json, time
-sys.path.insert(0, '/workspace/ARCOS/projetos/pokemon-pocket-intelligence/integrations/google-sheets')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sync
 
 def write_ab(tab, vals, ncols, chunk=800):

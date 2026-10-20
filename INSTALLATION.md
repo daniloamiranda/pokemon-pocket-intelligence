@@ -13,7 +13,7 @@ bash scripts/install_skills.sh            # instala na copia canonica + perfis-a
 bash scripts/install_skills.sh --verify   # conferencia posterior: hash unico
 ```
 
-- Copia canonica: `/home/hermes/.hermes/skills/<skill>/`
+- Copia canonica: `$HERMES_ROOT/skills/<skill>/` (no host: `~/.hermes/skills/`)
 - Perfis-alvo (default): `tony_stark`, `hermione_granger`, `leia_organa`, `c3po`
   (sobrescreva com `PERFIS="a,b" bash scripts/install_skills.sh`)
 - O script compara o **sha256 do SKILL.md** entre repo, copia canonica e perfis;

@@ -50,7 +50,7 @@ Formato `MAJOR.MINOR.PATCH` ([SemVer](https://semver.org/lang/pt-BR/)):
    (arte de terceiros) nem `.sqlite`/`.db`/`.env` (dado operacional/segredo).
 3. **Varredura de conteúdo**: zero credencial real (padrões de token de
    provedores, chaves privadas, atribuições `*_KEY`/`*_TOKEN` com valor),
-   zero e-mail pessoal e zero caminho interno (`/home/...`, `/opt/...`,
+   zero e-mail pessoal e zero caminho interno do host de desenvolvimento,
    árvore de perfis do operador) em arquivo publicado.
 4. **Presença**: `LICENSE` (MIT) na raiz, `README.md`, e as skills do projeto
    sob `skills/`.
@@ -75,11 +75,30 @@ Formato `MAJOR.MINOR.PATCH` ([SemVer](https://semver.org/lang/pt-BR/)):
 
 ## Histórico de releases
 
-- **2026-10-19** — commit público `2fdca07` "Initial public release"
-  (102 arquivos; árvore do commit interno `898a5f3`).
-  Verificação de custódia pelo CTO: paridade 102/102 (zero divergência de
-  conteúdo), zero credencial, zero arte/banco; achados de caminhos internos
-  em documentação registrados para saneamento no próximo snapshot.
+- **2026-10-19** — **v0.1.0 (retroativa)** e **v0.2.0**.
+  - `v0.1.0` → commit público `2fdca07` "Initial public release"
+    (102 arquivos; árvore do commit interno `898a5f3`). Tag anotada
+    aplicada retroativamente na decisão de versionamento do CEO.
+  - `v0.2.0` → commit público `fd33e17` (árvore do commit interno
+    `ce4277c`; 110 arquivos = 102 + 8 novos: `bin/tcgp`, `docs/USAGE.md`,
+    `data/card_roles.yaml`, `scripts/deck/card_roles.py`, testes UX-1/UX-2
+    e atualização do snapshot). Paridade 110/110 blob-sha contra o HEAD
+    canônico; GitHub Releases criadas para as duas tags (v0.2.0 `latest`) com
+    release notes no padrão Keep a Changelog e as limitações declaradas.
+  - Varredura do publicado: zero `.webp/.png/.jpg/.jpeg/.gif/.sqlite/.db/
+    .env`, zero padrão de credencial/token/chave privada. Resíduo de caminho
+    interno: 55 linhas em 23 arquivos (docs de procedimento + defaults de
+    manutenção com override por env + guardas de teste por design) —
+    retenção consciente declarada nas release notes; patch de portabilidade
+    v0.2.1 e saneamento editorial em cards próprios. Prova `tcgp` no clone
+    anônimo: `--help`, `meta --top 3` e `"Mega Altaria ex" --copiar`
+    executados (sem catálogo: recusa honesta rc=127 com instrução; com
+    catálogo local: rc=0 com papel por carta e nota heurística).
+  - **2026-10-19 (v1, sem tag)** — commit público `2fdca07`
+    "Initial public release" (102 arquivos; árvore do commit interno
+    `898a5f3`). Verificação de custódia pelo CTO: paridade 102/102,
+    zero credencial, zero arte/banco; achados de caminhos internos em
+    documentação registrados para saneamento no próximo snapshot.
 
 ## Decisão de versionamento registrada (19/10/2026)
 
@@ -95,9 +114,6 @@ Formato `MAJOR.MINOR.PATCH` ([SemVer](https://semver.org/lang/pt-BR/)):
   (`scripts/rules_refresh.py`). Delta medido v1→v2: 13 arquivos, +1.906/−31
   linhas, 7 arquivos novos, zero mudança em `contracts/` (sem quebra de
   contrato → não é MAJOR; capacidade nova → não é PATCH).
-- **Decisão final do CEO (19/10, comentário no card REL2)**: unânime dos três
-  pareceres — **v0.2.0** para a árvore atual e **tag retroativa v0.1.0** no
-  commit público inicial `2fdca07`. CTO (t_d29c0212, delta medido v1→v2: 13
-  arquivos, +1.906/−31, 7 novos, zero mudança em `contracts/`), QA
-  (t_dce8ead0, suíte 190/190 nos dois interpretadores, sondas tcgp rc=0) e
-  PMO (t_a0ea3829, régua minor-por-capacidade) recomendaram o mesmo número.
+- Pareceres QA (t_dce8ead0) e PMO (t_a0ea3829) em tramitação no board; voto
+  do CEO registrado no card REL2 (t_6f6b0f62): v0.2.0 + tag retroativa
+  v0.1.0. Decisão final do CEO registrada no card antes da publicação.

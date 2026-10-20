@@ -218,7 +218,7 @@ Citas:
 >
 > **Fonte e captura:** [FAQ-GAMEPLAY] support.pokemon.com, artigo 30330309361172,
 > capturado em 2026-10-19 via Firecrawl (Composio) — evidencia interna em
-> `/opt/data/pokemon-pocket/sources/FAQ-GAMEPLAY-30330309361172-FIRECRAWL.md`
+> armazenamento local de fontes do host (fora do repositorio, NAO versionado)
 > (superconjunto, 45 secoes, da captura de 2026-10-18 por API do help center).
 >
 > **Lacuna intencional:** a FAQ-GAMEPLAY NAO cobre mecanica de batalha (bench, mao

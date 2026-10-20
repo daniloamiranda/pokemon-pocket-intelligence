@@ -1,4 +1,4 @@
-"""Loader: grava cartas coletadas do Limitless no SQLite canonico (dev via /opt/data).
+"""Loader: grava cartas coletadas do Limitless no SQLite canonico do projeto.
 
 COPIADO para o repo via cp depois de lintar aqui. Editar esta copia e re-copiar.
 """

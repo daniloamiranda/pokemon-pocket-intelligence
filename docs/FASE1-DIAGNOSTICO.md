@@ -4,7 +4,8 @@
 **Data da coleta:** 18 de outubro de 2026, 16:41–16:45 (-03)
 **Executor:** Nick Fury (Orquestração Executiva) — coleta por ferramenta real, sem dados estimados
 **Status:** Fase 1 concluída. Fase 2 (arquitetura/estrutura) **não iniciada** — aguarda autorização do Proprietário (regra ARC-OS: não criar pastas fora do padrão sem autorização prévia).
-**Diretório de evidências (provisório):** `/opt/data/pokemon-pocket/evidence/`
+**Diretório de evidências (provisório):** área de trabalho local do executor
+(fora do repositório, não versionado)
 
 ---
 
@@ -17,9 +18,9 @@
 | SQLite (biblioteca) | 3.53.4 via `python3 -c "import sqlite3"` |
 | SQLite CLI | **AUSENTE** (`sqlite3` não existe no PATH) → todo acesso será via Python |
 | Ferramentas | `git`, `curl`, `uv`, `node` presentes |
-| Armazenamento | `/workspace` e `/opt/data` no MESMO volume `/dev/sda3` — 490G, 56G usados, **409G livres** (persistente, não efêmero) |
-| Perfis Hermes | 33 perfis em `/home/hermes/.hermes/profiles/` (isolamento por agente) |
-| HOME Hermes | `/home/hermes/.hermes` (SSOT de skills, cron, kanban, memórias) |
+| Armazenamento | áreas de trabalho do host em um MESMO volume persistente — não efêmero (detalhes de capacidade na evidência da fase) |
+| Perfis Hermes | 33 perfis sob `$HERMES_ROOT/profiles/` (isolamento por agente) |
+| HOME Hermes | `$HERMES_ROOT` (SSOT de skills, cron, kanban, memórias) |
 
 **Recursos SQLite verificados por teste real:**
 - FTS5: **SUPORTADO** (busca textual de nomes/efeitos de cartas é viável nativamente)
@@ -31,7 +32,7 @@
 
 ## 2. Estrutura atual de skills
 
-- Diretório de skills instaladas: `/home/hermes/.hermes/skills/` — **37 diretórios de skill**, organizados em subpastas de categoria (`arcsec/`, `productivity/`, `software-development/`, `autonomous-ai-agents/`, etc.), cada uma com `SKILL.md` + frontmatter YAML (name, description, version, metadata.hermes.tags) e arquivos de apoio em `references/`, `scripts/`, `templates/`, `assets/`.
+- Diretório de skills instaladas: `$HERMES_ROOT/skills/` — **37 diretórios de skill**, organizados em subpastas de categoria (`arcsec/`, `productivity/`, `software-development/`, `autonomous-ai-agents/`, etc.), cada uma com `SKILL.md` + frontmatter YAML (name, description, version, metadata.hermes.tags) e arquivos de apoio em `references/`, `scripts/`, `templates/`, `assets/`.
 - Criação/edição é feita pela ferramenta nativa **`skill_manage`** (não por criação manual de diretório). Um diretório criado "na mão" não registra a skill.
 - Convenção observada nas skills ARCSEC: `description` com gatilho "Use quando/Use ao …" no início + nome em kebab-case.
 - **Conclusão:** as 6 skills do projeto serão criadas via `skill_manage`, com `references/` para conteúdo pesado (regras, fontes, contratos) em vez de corpo gigante.
@@ -41,8 +42,8 @@
 ## 3. Recursos e integrações disponíveis
 
 **Hermes nativo (já operacional — sem custo de infraestrutura nova):**
-- **Kanban nativo**: `/home/hermes/.hermes/kanban.db` — tabelas `tasks`, `task_links`, `task_comments`, `task_events`, `task_runs`, `task_attachments`, `kanban_notify_subs`. É o mecanismo canônico de fila/delegação do Proprietário.
-- **Cron nativo**: `/home/hermes/.hermes/cron/` com `jobs.json` + `executions.db` — **13 jobs ativos** hoje, com suportes `cron`, `interval` e `once` (ex.: "ARCSEC Sentinela de Integridade", `every 360m`; "Sentinela ARC-OS — sync 15min"). Não há necessidade de cron do sistema operacional.
+- **Kanban nativo**: `$HERMES_ROOT/kanban.db` — tabelas `tasks`, `task_links`, `task_comments`, `task_events`, `task_runs`, `task_attachments`, `kanban_notify_subs`. É o mecanismo canônico de fila/delegação do Proprietário.
+- **Cron nativo**: `$HERMES_ROOT/cron/` com `jobs.json` + `executions.db` — **13 jobs ativos** hoje, com suportes `cron`, `interval` e `once` (ex.: "ARCSEC Sentinela de Integridade", `every 360m`; "Sentinela ARC-OS — sync 15min"). Não há necessidade de cron do sistema operacional.
 - **Watchdog**: padrão já em produção no ecossistema (jobs `watchdog-TASK-0013-tron`, `Watchdog PLAN-0010` — hoje desabilitados). O projeto reutilizará o mecanismo existente, sem inventar um paralelo.
 - **Navegador real** (`browser_exec`): necessário e suficiente — o banco de cartas e os sites de meta são renderizados em JavaScript.
 - **Delegação multagente** (`delegate_task`) e 33 perfis de especialistas disponíveis.
@@ -192,8 +193,15 @@ Formatação: cabeçalhos congelados, filtros, validação de dados em colunas c
 
 ## 11. Estrutura de diretórios proposta
 
-Caminho proposto (dentro do padrão ARC-OS): `/workspace/ARCOS/projetos/pokemon-pocket-intelligence/`
+Caminho proposto (dentro do padrão ARC-OS): `projetos/pokemon-pocket-intelligence/`
+(relativo à raiz do workspace ARC-OS do host)
 (hoje `ARCOS/projetos/` contém apenas `laya-poc`; a estrutura abaixo é nova e **depende de autorização**.)
+
+> Nota de portabilidade (v0.2.1): os caminhos deste relatório histórico observam
+> o host de origem da auditoria e foram reescritos de forma portátil
+> (`$HERMES_ROOT` = raiz Hermes do host; "área de trabalho local" = armazenamento
+> de evidências do executor, fora do repositório). O caminho canônico do projeto
+> acima é o identificador duradouro.
 
 ```
 pokemon-pocket-intelligence/
@@ -206,7 +214,7 @@ pokemon-pocket-intelligence/
 ├── tests/           unit/ integration/ fixtures/ golden/
 └── scripts/         coleta, validação, sync, auditoria
 ```
-As 6 skills **não** ficarão aqui: vivem em `/home/hermes/.hermes/skills/` (com `references/` apontando para a documentação do projeto), porque é o mecanismo real de descoberta/carregamento do Hermes.
+As 6 skills **não** ficarão aqui: vivem em `$HERMES_ROOT/skills/` (com `references/` apontando para a documentação do projeto), porque é o mecanismo real de descoberta/carregamento do Hermes.
 
 ---
 
@@ -282,7 +290,8 @@ As 6 skills **não** ficarão aqui: vivem em `/home/hermes/.hermes/skills/` (com
 ## Anexo B — Decisões pendentes do Proprietário
 
 - **D1. Google Sheets:** autorizar o OAuth (Google Cloud + OAuth Desktop + consentimento) ou seguir com espelho local `.xlsx/.csv` por enquanto?
-- **D2. Diretório do projeto:** autorizar a criação de `/workspace/ARCOS/projetos/pokemon-pocket-intelligence/`?
+- **D2. Diretório do projeto:** autorizar a criação de
+  `projetos/pokemon-pocket-intelligence/` no workspace ARC-OS?
 - **D3. Escopo de coleta competitiva:** arquitetura pública (habilita API key e decklists completos do Limitless) ou uso estritamente privado nos endpoints sem chave?
 - **D4. Times e owners:** confirmar o CTO (tony_stark) como dono técnico da execução, com QA independente (hermione_granger) no gate, e Leia (leia_organa) no cronograma.
 - **D5. Automação:** autorizar o registro das tarefas no Kanban nativo e a criação de **um** job de cron (cartas semanal + meta diário) com watchdog, ou manter execução manual nesta fase?

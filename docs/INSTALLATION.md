@@ -13,7 +13,8 @@ bash scripts/install_skills.sh            # instala na copia canonica + perfis-a
 bash scripts/install_skills.sh --verify   # conferencia posterior: hash unico
 ```
 
-- Copia canonica: `/home/hermes/.hermes/skills/<skill>/` — RAIZ FIXA (F12): o
+- Copia canonica: `$HERMES_ROOT/skills/<skill>/` (no host: `~/.hermes/skills/`)
+  — RAIZ FIXA (F12): o
   instalador NUNCA herda `HERMES_HOME` do shell (shell de agente aponta para o
   proprio perfil; herdar foi o que criou a arvore fantasma
   `profiles/<perfil>/profiles/` na era F7-F9). Override explicito apenas via
@@ -84,7 +85,7 @@ Copie o gabarito `config/` e preencha fora do repositorio (`.env` nunca versiona
 
 ## 5. Suite de testes e ambiente (TESTING.md)
 
-A suite completa roda com `/opt/data/f5_venv/bin/python3 -m unittest
+A suite completa roda com `<venv do projeto>/bin/python3 -m unittest
 discover -s tests/unit -v` (63 testes OK). No python3 do sistema a suite
 tambem e verde: os casos dependentes do SDK Composio (venv-only,
 composio==0.22.0) PULAM com motivo explicito. Comando exato, revisao por

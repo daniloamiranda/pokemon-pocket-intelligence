@@ -125,7 +125,8 @@ corpus: 202 → 194 (−8); Bulbasaur: 55 → 53 (−2); linhas `deck_cards`: 11
 top-6 do snapshot full por share: **inalterado** (efeito fino no agregado).
 Suite do projeto: **112/112 verde** (3 skipped por design). `PRAGMA
 foreign_key_check` vazio; `integrity_check` ok. Relatórios pós:
-`/opt/data/f7c/report_{full,7d,14d,30d}_pos_f7c.json` (fora do repo, dados grandes).
+`report_{full,7d,14d,30d}_pos_f7c.json` na área de trabalho local do executor
+(fora do repo, dados grandes).
 
 ## 10. Manutenção F13+ — nomes dos promos P-A/P-B poluídos com comentário HTML (19/10/2026)
 

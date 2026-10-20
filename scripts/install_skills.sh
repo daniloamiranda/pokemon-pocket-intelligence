@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # F12 - install_skills.sh: instala as skills do projeto na copia canonica do Hermes
-# (/home/hermes/.hermes/skills/) e nos perfis-alvo (/home/hermes/.hermes/profiles/<perfil>/skills/).
+# ($HERMES_ROOT/skills/ — raiz canonica do Hermes no host) e nos perfis-alvo
+# ($HERMES_ROOT/profiles/<perfil>/skills/).
 #
 # FIX DE RAIZ (F12, t_f8f12581 — DEV-02 da F10): a versao anterior herdava
 # HERMES_HOME do shell. O shell dos agentes exporta HERMES_HOME apontando para o
@@ -36,7 +37,8 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_SRC="$REPO/skills"
 # FIX F12: raiz canonica FIXA — NUNCA herdar HERMES_HOME do shell (causa-raiz do
 # DEV-02: shell do agente exporta HERMES_HOME do proprio perfil).
-HERMES_ROOT="/home/hermes/.hermes"
+# Default portavel: raiz Hermes do proprio usuario; override dedicado abaixo.
+HERMES_ROOT="${HOME}/.hermes"
 if [[ -n "${HERMES_ROOT_SKILLS:-}" ]]; then
     HERMES_ROOT="$HERMES_ROOT_SKILLS"   # override explicito e dedicado (nunca HERMES_HOME)
 fi

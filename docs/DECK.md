@@ -126,7 +126,8 @@ do snapshot 30d da F7, e SEMPRE declara quando a análise é teórica.
 
 - 3+ cartas principais legais provadas: Mega Gengar ex, Hoopa ex, Greninja
   (FTS5 resolve `Greninja` → `Greninja ex` B1/73) — veredictos `valido` rc=0
-  (saídas reais salvas: /opt/data/pokemon-cross/f8_out_*2.json).
+  (saídas reais salvas na área de trabalho local do executor: arquivos
+  `f8_out_*2.json`).
 - Persistência: `deck-mega-gengar-ex-001` com 10 linhas em `deck_cards`
   (soma 20) + 1 spec.
 - Zero carta inventada: teste `test_06_carta_inexistente` + veredicto JSON.

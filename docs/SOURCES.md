@@ -7,7 +7,8 @@ Politica: NAO inventar regra (Regra 6). Mecanica de jogo = fonte primaria Pokemo
 |---|---|---|---|---|---|
 | [DB] | Pokemon.com — "Learn How to Build a Deck in Pokemon TCG Pocket" (deck building) | https://www.pokemon.com/us/features/learn-how-to-build-a-deck-in-pokemon-tcg-pocket | DECK-001, DECK-002, EVOL-002, POCKET-001, POCKET-002, POCKET-007, POCKET-010, POCKET-011, POCKET-012, TURN-001/DRAW-001, ATK-002 | 2026-10-18 | OK (HTTP 200; texto literal extraido e conferido) |
 | [FAQ-BATTLE] | support.pokemon.com — "Pokemon TCG Pocket Battle Rules FAQ" (artigo 38906248102292, "Updated May 12, 2026") | https://support.pokemon.com/hc/en-us/articles/38906248102292-Pokemon-TCG-Pocket-Battle-Rules-FAQ | POCKET-006, POCKET-013, ATK-003, ATK-004, EFF-001, EFF-002, RES-001, RES-002, ERRATA-001 | 2026-10-18 | OK (corpo completo obtido via API oficial do help center Zendesk; site bloqueia crawler com Cloudflare) |
-| [FAQ-GAMEPLAY] | support.pokemon.com — "Pokemon TCG Pocket Gameplay FAQ" (artigo 30330309361172) | https://support.pokemon.com/hc/en-us/articles/30330309361172-Pokemon-TCG-Pocket-Gameplay-FAQ | Delegacao das regras de batalha ao tutorial in-app ("Tips" / botao "?"); regras != TCG fisico; ranked points em empate (nao e regra de batalha); MECANICAS DE APP/RANQUEADA APP-001..APP-010 (Area 15 do RULES.md) | 2026-10-18 (API do help center); 2026-10-19 (Firecrawl) | OK (recaptura FULL via Firecrawl/Composio em 19/10 — superconjunto da API de 18/10; evidencia interna NAO versionada em /opt/data/pokemon-pocket/sources/FAQ-GAMEPLAY-30330309361172-FIRECRAWL.md) |
+| [FAQ-GAMEPLAY] | support.pokemon.com — "Pokemon TCG Pocket Gameplay FAQ" (artigo 30330309361172) | https://support.pokemon.com/hc/en-us/articles/30330309361172-Pokemon-TCG-Pocket-Gameplay-FAQ | Delegacao das regras de batalha ao tutorial in-app ("Tips" / botao "?"); regras != TCG fisico; ranked points em empate (nao e regra de batalha); MECANICAS DE APP/RANQUEADA APP-001..APP-010 (Area 15 do RULES.md) | 2026-10-18 (API do help center); 2026-10-19 (Firecrawl) | OK (recaptura FULL via Firecrawl/Composio em 19/10 — superconjunto da API de 18/10; evidencia interna NAO versionada em armazenamento local de fontes do host
+(fora do repositorio)) |
 | [LL] | pocket.limitlesstcg.com — fichas de carta | https://pocket.limitlesstcg.com/cards/{SET}/{NUM} | POCKET-004 (Gengar ex A1/123), POCKET-005 (Mega Gengar ex B4b/141), WEAK-001, RET-001, ABIL-001..003, EVOL-001, DECK-003/004, REST-001 | 2026-10-18 | OK (HTTP 200; texto literal das fichas conferido) |
 | [LL-IMG] | Limitless CDN — imagens das cartas (apenas URL, nunca baixadas) | https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/pocket/{SET}/{SET}_{NNN:03d}_EN_SM.webp | URL de imagem por impressão em `card_prints.image_url` (F4b). Padrão CONFIRMADO contra o `src` real de `<div class="card-image">` nas fichas e das listagens (`display=compact&show=all`); também nas listagens promo P-A/P-B (mesmo padrão). Amostragem 10 por conjunto × 24 conjuntos: 240/240 HTTP 200 (2026-10-18). Cobertura no banco: 4317/4317 (100%). | 2026-10-18 | OK (URLs conferidas contra a fonte; sem exceção de promo) |
 | [XC-1] | pokemontcgpocket.app (agregador, declaradamente Limitless-sourced) | https://pokemontcgpocket.app/ | Validacao cruzada do meta (tendencia, nunca numero): 19/10/2026 servia janela de 18/10 com 8.697 partidas; Altaria/Espeon share #1 — coerente com snap-30d | 2026-10-19 | OK (leitura ao vivo; janela/escopo proprios declarados na pagina) |
@@ -62,8 +63,9 @@ Politica: NAO inventar regra (Regra 6). Mecanica de jogo = fonte primaria Pokemo
   (Composio; toolkit firecrawl) — superconjunto da captura de 18/10 por API
   do help center Zendesk (45 vs 43 secoes).
 - Evidencia interna NAO versionada (texto de terceiros):
-  `/opt/data/pokemon-pocket/sources/FAQ-GAMEPLAY-30330309361172-FIRECRAWL.md`
-  e a variante do extrator estatico (`FAQ-GAMEPLAY-30330309361172.md`).
+  armazenamento local de fontes do host (fora do repositorio, NAO versionado):
+  `FAQ-GAMEPLAY-30330309361172-FIRECRAWL.md` e a variante do extrator estatico
+  (`FAQ-GAMEPLAY-30330309361172.md`).
   Nenhum runtime le essas capturas: a base citavel segue sendo docs/RULES.md.
 - A FAQ-GAMEPLAY NAO cobre mecanica de batalha: nenhuma regra NAO VERIFICADA
   das Areas 1-14 foi alterada, incluindo FORMAT-001 — a fonte cobre o
@@ -82,7 +84,7 @@ que validate_deck.py, build_deck.py e evaluate_deck.py nao conhecem rede).
 Quando rodar:
 1. Suspeita de mudanca oficial (news TPC, novo set/temporada — a politica de
    fontes item 4 ja define esse gatilho —, ou post citando regra nova).
-2. Rodar MANUALMENTE: `/opt/data/f5_venv/bin/python3 scripts/rules_refresh.py`
+2. Rodar MANUALMENTE: `<venv do projeto>/bin/python3 scripts/rules_refresh.py`
    (mantenedor usa o venv por causa do SDK composio; a captura nunca escreve
    em data/pocket.sqlite). Opcional: `--report arquivo.md` salva o relatorio.
 3. Ler o relatorio impresso: por fonte, "sem mudanca" (codigo 0, snapshot fica

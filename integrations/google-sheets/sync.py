@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
 """Composio -> Google Sheets v3 sync helper (project pokemon-pocket-intelligence)."""
 import os, json, time, datetime, argparse
+from pathlib import Path
 
-ENV_PATH = os.environ.get('C3PO_ENV', '/home/hermes/.hermes/profiles/c3po/.env')
+# Default portavel: .env do perfil de integracao c3po na raiz Hermes do
+# usuario (~/.hermes/profiles/c3po/.env — sem caminho literal de host); em
+# checkout cru, aponte C3PO_ENV para o .env correto.
+ENV_PATH = os.environ.get(
+    'C3PO_ENV',
+    str(Path.home() / '.hermes' / 'profiles' / 'c3po' / '.env'))
 SPREADSHEET_ID = '1a8iGqr4w7y-QgCKX6ChGcshYmjKdhdOIeuuvLBkGit0'
 CONNECTED_ACCOUNT_ID = 'ca_lOfRvM1J5601'
 USER_ID = 'default'
 TOOLKIT_VERSION = '20261018_00'
-# SDK: composio==0.22.0 in /opt/data/f5_venv; toolkit version pinned.
+# SDK: composio==0.22.0 no venv do projeto (<venv local>, ver docs/TESTING.md);
+# toolkit version pinned.
 
 
 def _env():
+    if not Path(ENV_PATH).is_file():
+        raise RuntimeError(
+            'ENV do c3po nao encontrado (%s): defina C3PO_ENV=/caminho/.env '
+            'ou instale o .env do perfil em ~/.hermes/profiles/c3po/.env'
+            % ENV_PATH)
     d = {}
     for line in open(ENV_PATH):
         line = line.strip()
@@ -19,7 +31,7 @@ def _env():
             d[k.strip()] = v.strip().strip('"').strip("'")
     return d
 
-_env_cache = _env()
+_env_cache = None  # lazy: resolvido no primeiro client() — importacao leve
 
 # SDK composio E OPCIONAL: instalado apenas no venv (composio==0.22.0,
 # ver docs/TESTING.md). O modulo precisa ser importavel em qualquer
@@ -35,12 +47,14 @@ except ImportError:  # SDK ausente neste interprete (suite sem venv)
 _client = None
 
 def client():
-    global _client
+    global _client, _env_cache
     if not COMPOSIO_OK:
         raise RuntimeError(
-            'SDK composio ausente neste interprete — use o venv '
-            '/opt/data/f5_venv (composio==0.22.0); ver docs/TESTING.md')
+            'SDK composio ausente neste interprete — use o venv do projeto '
+            '(composio==0.22.0; ver docs/TESTING.md secao 2)')
     if _client is None:
+        if _env_cache is None:
+            _env_cache = _env()
         _client = Composio(api_key=_env_cache['COMPOSIO_API_KEY'])
     return _client
 

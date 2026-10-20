@@ -28,7 +28,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent.parent
 SKILLS_SRC = REPO / "skills"
 LICENSE = REPO / "LICENSE"
-HERMES_ROOT = Path("/home/hermes/.hermes")
+# Portavel: default = raiz Hermes do proprio usuario; override por
+# TCGP_HERMES_ROOT (checkout em maquina alternativa pula com motivo claro).
+HERMES_ROOT = Path(os.environ.get("TCGP_HERMES_ROOT", Path.home() / ".hermes"))
 PERFIS = ["tony_stark", "hermione_granger", "leia_organa", "c3po"]
 
 # Mapa minimo de reconhecimento (primeira linha do texto -> identificador SPDX).

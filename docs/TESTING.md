@@ -5,11 +5,17 @@ os casos dependentes do SDK Composio sao PULADOS com motivo explicito; no
 venv rodam de fato. **Suite "vermelha" sem defeito de codigo nao e aceitavel**
 (defeito F5e: ate 18/10 a suite dava ERROR fora do venv).
 
+> Convencao de portabilidade (v0.2.1): `<venv do projeto>` = qualquer venv
+> criado pelo operador (`python3 -m venv <caminho>`; o SDK `composio==0.22.0`
+> e instalado nele). `$HERMES_ROOT` = raiz da instalacao Hermes do host
+> (padrao `~/.hermes`). Caminhos absolutos do host de desenvolvimento eram
+> detalhe de ambiente, nao contrato.
+
 ## 1. Como rodar a suite
 
 ```bash
 # padrao do projeto (venv — todos os casos rodam):
-/opt/data/f5_venv/bin/python3 -m unittest discover -s tests/unit -v
+<venv do projeto>/bin/python3 -m unittest discover -s tests/unit -v
 # Esperado: Ran 63 tests ... OK
 
 # interprete do sistema (auditoria rapida — casos SDK-dependentes pulam com motivo):
@@ -30,18 +36,18 @@ com motivo claro (ver docs/INSTALLATION.md paragrafo 3).
 ## 2. Requisito de ambiente: SDK Composio (venv)
 
 O modulo `integrations/google-sheets/sync.py` depende do SDK
-`composio==0.22.0` (instalado apenas em `/opt/data/f5_venv`). Se o interprete
+`composio==0.22.0` (instalado apenas no `<venv do projeto>`). Se o interprete
 nao tiver o SDK:
 
 - `sync.py` IMPORTA sem quebrar (guarda `try/except ImportError` desde o F5e);
   `client()` falha tarde com mensagem clara apontando para este documento;
 - os testes que importam esse modulo PULAM com o motivo acima.
 
-Criar o venv do zero (auditor novo sem `/opt/data/f5_venv`):
+Criar o venv do zero (auditor novo sem venv local):
 
 ```bash
-python3 -m venv /opt/data/f5_venv
-/opt/data/f5_venv/bin/pip install composio==0.22.0
+python3 -m venv <venv do projeto>
+<venv do projeto>/bin/pip install composio==0.22.0
 ```
 
 O venv e um detalhe de AMBIENTE, nao um artefato versionado. Credenciais
@@ -53,8 +59,8 @@ O venv e um detalhe de AMBIENTE, nao um artefato versionado. Credenciais
 | Fluxo | Interprete | Por que |
 |---|---|---|
 | Suite unitaria (unidades puras) | qualquer | SDK-dependentes pulam |
-| Suite completa (prova de ambiente venv) | `/opt/data/f5_venv/bin/python3` | 0 skipped por SDK |
-| export_catalog.py / resync (Google Sheets) | `/opt/data/f5_venv/bin/python3` | precisa do SDK Composio |
+| Suite completa (prova de ambiente venv) | `<venv do projeto>/bin/python3` | 0 skipped por SDK |
+| export_catalog.py / resync (Google Sheets) | `<venv do projeto>/bin/python3` | precisa do SDK Composio |
 | Coleta/migracao/catalogo/schema | `python3` (sistema) | stdlib only |
 
 ## 4. Bancos de producao NAO sao requisito de teste
@@ -90,7 +96,7 @@ O contrato **"skill no repo = skill instalada"** e vigiado por teste na suite:
 `tests/unit/test_f12_skills_guard.py` roda o proprio
 `scripts/install_skills.sh --verify` e compara a ARVORE COMPLETA de arquivos
 (nao so o SKILL.md) de cada skill do repo com a copia canonica
-(`/home/hermes/.hermes/skills/`) e com cada perfil-alvo (`tony_stark`,
+(`$HERMES_ROOT/skills/`) e com cada perfil-alvo (`tony_stark`,
 `hermione_granger`, `leia_organa`, `c3po`). Arquivo divergente, ausente ou
 EXTRA no destino reprova a suite.
 
@@ -113,12 +119,15 @@ Detalhes que a F12 fixou na raiz:
 - O instalador NUNCA herda `HERMES_HOME` do shell (o shell do agente aponta
   para o proprio perfil — foi isso que criou a arvore fantasma
   `profiles/tony_stark/profiles/` na era F7-F9, com "instalacao ok" na raiz
-  errada). A raiz canonica e fixa: `/home/hermes/.hermes`; override explicito
+  errada). A raiz canonica e fixa: `$HERMES_ROOT` (no host, `~/.hermes`); override explicito
   apenas via `HERMES_ROOT_SKILLS` (fail-fast rc=3 se a raiz nao existir).
 - A comparacao cobre a arvore completa (`references/`, `weights.json`, etc.) —
   drift em arquivo auxiliar tambem e instalacao parcial.
 - O teste da guarda e SOMENTE LEITURA: a suite nunca instala nada. Sem a raiz
-  canonica no host (checkout cru), o caso pula com motivo explicito.
+  canonica no host (checkout cru), o caso pula com motivo explicito. A raiz
+  e derivada de forma portavel (`~/.hermes` do usuario) e aceita override
+  explicito pela variavel `TCGP_HERMES_ROOT` (o instalador, pela
+  `HERMES_ROOT_SKILLS`).
 - Prova de falha (19/10/2026): tamper de 1 linha na copia do perfil c3po ->
   verify rc=1 (`FALHA ...@c3po ... divergente`), guarda rc=1 na suite apontando
   `pokemon-pocket-card-vision@perfil:c3po: SKILL.md divergente`; restore ->
@@ -266,7 +275,7 @@ manual (`scripts/rules_refresh.py`), nunca dependencia de runtime. A guarda
   propio maintainer sem libs de rede diretas nem agendamento embutido.
 
 ```bash
-/opt/data/f5_venv/bin/python3 -m unittest tests.unit.test_rules_refresh -v
+<venv do projeto>/bin/python3 -m unittest tests.unit.test_rules_refresh -v
 # Esperado: Ran 17 tests ... OK (idem no interprete do sistema)
 ```
 

@@ -5,8 +5,9 @@
 **Data de emissão:** 2026-10-18 · Versão 1.0
 **Fonte de verdade:** `docs/FASE1-DIAGNOSTICO.md` (auditado; intocado)
 **Board:** `pokemon-pocket` (kanban nativo Hermes) — espelho vivo do plano
-**Jev (DEC-0008):** `jev_batteries: required` — bateria `delegate` executada em 2026-10-18: decisão `act` (confidence 0.97, gate 0.90), roteamento `owner_self`; nouls `on_critical_path` 0.55 e `blocked_by_dependency` 0.32 — monitorados por DEC-0007, sem escalonamento imediato. Registro bruto em `/opt/data/pokemon-pocket/tmp/jev_delegate.out`.
-**Enquadramento:** R2 — escrita apenas em `/workspace/ARCOS/projetos/pokemon-pocket-intelligence`
+**Jev (DEC-0008):** `jev_batteries: required` — bateria `delegate` executada em 2026-10-18: decisão `act` (confidence 0.97, gate 0.90), roteamento `owner_self`; nouls `on_critical_path` 0.55 e `blocked_by_dependency` 0.32 — monitorados por DEC-0007, sem escalonamento imediato. Registro bruto em área de trabalho local do executor (fora do repositório, não versionado).
+**Enquadramento:** R2 — escrita apenas na árvore canônica do projeto
+(`projetos/pokemon-pocket-intelligence` no workspace ARC-OS do host)
 
 ---
 

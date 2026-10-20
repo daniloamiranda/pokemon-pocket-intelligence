@@ -64,7 +64,9 @@ RC_BAD_CAPTURE = 4
 RC_CHANGED = 10
 
 SNAPSHOT_DIR_DEFAULT = ROOT / "data" / "rules_snapshots"
-ENV_FILE_DEFAULT = "/home/hermes/.hermes/profiles/c3po/.env"
+# Default portavel: .env do perfil c3po na raiz Hermes do usuario (igual ao
+# sync F11); override por C3PO_ENV, RULES_REFRESH_ENV_FILE ou --env-file.
+ENV_FILE_DEFAULT = Path.home() / ".hermes" / "profiles" / "c3po" / ".env"
 TK_VERSION = "20261014_01"          # pin consciente (igual padrao F11)
 SCRAPE_TIMEOUT_S = 120              # teto por fonte; estouro = erro declarado
 MIN_BYTES_DEFAULT = 3000            # gameplay ~18.9k, battle ~6k (19/10/2026)
@@ -166,7 +168,7 @@ def list_connected_accounts(credential: str):
     except ImportError as ex:
         raise NoConnectionError(
             "SDK composio ausente neste interprete — use o venv "
-            "/opt/data/f5_venv/bin/python3 (composio==0.22.0; ver "
+            "o venv do projeto (<venv local>; composio==0.22.0; ver "
             "docs/TESTING.md secao 2). Sem SDK nao ha captura."
         ) from ex
     client = Composio(api_key=credential)

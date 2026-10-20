@@ -2,8 +2,8 @@
 
 Contrato (DEV-02 da F10): cada skill em <repo>/skills/ deve existir com a MESMA
 arvore de arquivos (sha256 por arquivo) na copia canonica do Hermes
-(/home/hermes/.hermes/skills/) e em cada perfil-alvo
-(/home/hermes/.hermes/profiles/<perfil>/skills/). Qualquer divergencia — arquivo
+($HERMES_ROOT/skills/ — raiz canonica do Hermes no host) e em cada perfil-alvo
+($HERMES_ROOT/profiles/<perfil>/skills/). Qualquer divergencia — arquivo
 divergente, ausente ou EXTRA no destino — reprova a suite.
 
 Isso existe porque a classe de defeito se repetiu 3x (F3, F6, F7-F9): instalacao
@@ -28,7 +28,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent.parent
 SKILLS_SRC = REPO / "skills"
 INSTALLER = REPO / "scripts" / "install_skills.sh"
-HERMES_ROOT = Path("/home/hermes/.hermes")
+# Portavel: default = raiz Hermes do proprio usuario; override por
+# TCGP_HERMES_ROOT (checkout em maquina alternativa pula com motivo claro).
+HERMES_ROOT = Path(os.environ.get("TCGP_HERMES_ROOT", Path.home() / ".hermes"))
 PERFIS = ["tony_stark", "hermione_granger", "leia_organa", "c3po"]
 
 IGNORAR = {".DS_Store", "__pycache__"}
