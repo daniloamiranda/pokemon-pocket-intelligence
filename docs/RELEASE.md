@@ -85,8 +85,9 @@ Formato `MAJOR.MINOR.PATCH` ([SemVer](https://semver.org/lang/pt-BR/)):
     manutenção), declarado nas notas daquela release e sanado no commit
     interno `a5edf36`. Este patch publica a árvore já saneada.
   - Verificação do publicado (clone anônimo, sem token): 110 arquivos;
-    zero `.webp/.png/.jpg/.jpeg/.gif/.sqlite/.db/.env`; **zero** caminho do
-    host (`/home/...`, `/opt/data/...`, `/workspace/...`); **zero** padrão de
+    zero `.webp/.png/.jpg/.jpeg/.gif/.sqlite/.db/.env`; **zero** caminho
+    absoluto da máquina de desenvolvimento (diretório pessoal do operador,
+    armazenamento do executor ou raiz do workspace); **zero** padrão de
     credencial/chave; paridade blob-sha **110/110** contra o HEAD canônico;
     `LICENSE` (MIT) presente; `bin/tcgp` modo 755.
   - Prova `tcgp` no clone anônimo: `--help` rc=0; sem catálogo (banco não
